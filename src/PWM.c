@@ -71,18 +71,3 @@ static uint16_t calc_duty_cycle(PWM* self, int8_t throttle)
     return (1500 + self->offset + (self->limit * ((float)throttle/100))); 
 }
 
-void setup() 
-{
-   // stdio_init_all();
-    gpio_init(LED_BUILTIN);
-    gpio_set_dir(LED_BUILTIN, GPIO_OUT);
-
-}
-
-void blink()
- {
-    gpio_put(LED_BUILTIN, 1);
-    sleep_ms(750);
-    gpio_put(LED_BUILTIN, 0);
-    sleep_ms(1050);
-}

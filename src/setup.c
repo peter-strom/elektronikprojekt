@@ -5,6 +5,9 @@ void setup()
     gpio_init(LED_BUILTIN);
     gpio_set_dir(LED_BUILTIN, GPIO_OUT);
 
+    init_i2c();
+
+    stdio_init_all();
 }
 
 //function used for debuging
