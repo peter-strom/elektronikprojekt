@@ -10,19 +10,13 @@
 int main(void)
 {
     setup();
-    
-    //test
-    PWM ESC = new_PWM(ESC_PIN);
-    set_speed(&ESC, 35);
-    sleep_ms(6000);
-    set_speed(&ESC, -70);
-    sleep_ms(6000);
-    set_speed(&ESC, 50);
-    sleep_ms(6000);
-    set_speed(&ESC, 0);
 
+    uint8_t data = 5;
+    //reg_read(i2c_unit,i2c_device_adress,device_register,*data_pointer, no_bytes)
+    reg_read(i2c,I2C_ADDRESS,0xC0,&data,1);
     while(true)
     {
+        printf("data: %d\n",data);
         blink();
     } 
 

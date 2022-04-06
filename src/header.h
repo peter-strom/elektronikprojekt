@@ -19,6 +19,7 @@
 #define SERVO_PIN 6 //GPIO 6 PWM Channel 3A
 #define ESC_PIN 13 //GPIO 13 PWM Channel 6B
 #define LED_BUILTIN 6
+#define I2C_ADDRESS 0x29
 
 //global variables
 i2c_inst_t* i2c;

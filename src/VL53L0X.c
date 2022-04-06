@@ -29,7 +29,7 @@
 /**
  * We can read the model id to confirm that the device is booted.
  * (There is no fresh_out_of_reset as on the vl6180x)
- */
+
 bool device_is_booted()
 {
     uint8_t device_id = 0;
@@ -38,3 +38,4 @@ bool device_is_booted()
     }
     return device_id == VL53L0X_EXPECTED_DEVICE_ID;
 }
+ */
