@@ -3,10 +3,12 @@
 #include "header.h"
 
 //macro
-
+#define GYRO_ADDRESS 0x68 //mpu6050
 
 
 // Function Declarations
+void mpu6050_reset();
+void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t *temp);
 
 int reg_write(i2c_inst_t *i2c, 
                 const uint addr, 
