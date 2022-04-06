@@ -22,7 +22,7 @@
 #define I2C_ADDRESS 0x29
 
 //global variables
-i2c_inst_t* i2c;
+
 
 // Global functions:
 void setup(void);
