@@ -12,14 +12,16 @@
 #include "hardware/i2c.h"
 #include "VL53L0X.h"
 #include "I2C.h"
+//#include <string.h>
+#include "pico/binary_info.h"
+#include "hardware/i2c.h"
 
 //Macros:
-#define SDA_PIN 5
-#define SCL_PIN 21
 #define SERVO_PIN 6 //GPIO 6 PWM Channel 3A
 #define ESC_PIN 13 //GPIO 13 PWM Channel 6B
 #define LED_BUILTIN 6
-#define I2C_ADDRESS 0x29
+#define VL53L0X_ADDRESS 0x29
+
 
 //global variables
 
