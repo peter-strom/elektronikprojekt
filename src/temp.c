@@ -37,12 +37,12 @@ static bool read_strobe()
  */
 static bool get_spad_info_from_nvm(uint8_t *spad_count, uint8_t *spad_type, uint8_t good_spad_map[6])
 {
-    bool success = false;
+    bool success = true;
     uint8_t tmp_data8 = 0;
     uint32_t tmp_data32 = 0;
 
     /* Setup to read from NVM */
-    success  = i2c_write_addr8_data8(0x80, 0x01);
+    success &= i2c_write_addr8_data8(0x80, 0x01);
     success &= i2c_write_addr8_data8(0xFF, 0x01);
     success &= i2c_write_addr8_data8(0x00, 0x00);
     success &= i2c_write_addr8_data8(0xFF, 0x06);
@@ -194,151 +194,9 @@ static bool set_spads_from_nvm()
     return true;
 }
 
-/**
- * Load tuning settings (same as default tuning settings provided by ST api code)
- */
-static bool load_default_tuning_settings()
-{
-    bool success = i2c_write_addr8_data8(0xFF, 0x01);
-    success &= i2c_write_addr8_data8(0x00, 0x00);
-    success &= i2c_write_addr8_data8(0xFF, 0x00);
-    success &= i2c_write_addr8_data8(0x09, 0x00);
-    success &= i2c_write_addr8_data8(0x10, 0x00);
-    success &= i2c_write_addr8_data8(0x11, 0x00);
-    success &= i2c_write_addr8_data8(0x24, 0x01);
-    success &= i2c_write_addr8_data8(0x25, 0xFF);
-    success &= i2c_write_addr8_data8(0x75, 0x00);
-    success &= i2c_write_addr8_data8(0xFF, 0x01);
-    success &= i2c_write_addr8_data8(0x4E, 0x2C);
-    success &= i2c_write_addr8_data8(0x48, 0x00);
-    success &= i2c_write_addr8_data8(0x30, 0x20);
-    success &= i2c_write_addr8_data8(0xFF, 0x00);
-    success &= i2c_write_addr8_data8(0x30, 0x09);
-    success &= i2c_write_addr8_data8(0x54, 0x00);
-    success &= i2c_write_addr8_data8(0x31, 0x04);
-    success &= i2c_write_addr8_data8(0x32, 0x03);
-    success &= i2c_write_addr8_data8(0x40, 0x83);
-    success &= i2c_write_addr8_data8(0x46, 0x25);
-    success &= i2c_write_addr8_data8(0x60, 0x00);
-    success &= i2c_write_addr8_data8(0x27, 0x00);
-    success &= i2c_write_addr8_data8(0x50, 0x06);
-    success &= i2c_write_addr8_data8(0x51, 0x00);
-    success &= i2c_write_addr8_data8(0x52, 0x96);
-    success &= i2c_write_addr8_data8(0x56, 0x08);
-    success &= i2c_write_addr8_data8(0x57, 0x30);
-    success &= i2c_write_addr8_data8(0x61, 0x00);
-    success &= i2c_write_addr8_data8(0x62, 0x00);
-    success &= i2c_write_addr8_data8(0x64, 0x00);
-    success &= i2c_write_addr8_data8(0x65, 0x00);
-    success &= i2c_write_addr8_data8(0x66, 0xA0);
-    success &= i2c_write_addr8_data8(0xFF, 0x01);
-    success &= i2c_write_addr8_data8(0x22, 0x32);
-    success &= i2c_write_addr8_data8(0x47, 0x14);
-    success &= i2c_write_addr8_data8(0x49, 0xFF);
-    success &= i2c_write_addr8_data8(0x4A, 0x00);
-    success &= i2c_write_addr8_data8(0xFF, 0x00);
-    success &= i2c_write_addr8_data8(0x7A, 0x0A);
-    success &= i2c_write_addr8_data8(0x7B, 0x00);
-    success &= i2c_write_addr8_data8(0x78, 0x21);
-    success &= i2c_write_addr8_data8(0xFF, 0x01);
-    success &= i2c_write_addr8_data8(0x23, 0x34);
-    success &= i2c_write_addr8_data8(0x42, 0x00);
-    success &= i2c_write_addr8_data8(0x44, 0xFF);
-    success &= i2c_write_addr8_data8(0x45, 0x26);
-    success &= i2c_write_addr8_data8(0x46, 0x05);
-    success &= i2c_write_addr8_data8(0x40, 0x40);
-    success &= i2c_write_addr8_data8(0x0E, 0x06);
-    success &= i2c_write_addr8_data8(0x20, 0x1A);
-    success &= i2c_write_addr8_data8(0x43, 0x40);
-    success &= i2c_write_addr8_data8(0xFF, 0x00);
-    success &= i2c_write_addr8_data8(0x34, 0x03);
-    success &= i2c_write_addr8_data8(0x35, 0x44);
-    success &= i2c_write_addr8_data8(0xFF, 0x01);
-    success &= i2c_write_addr8_data8(0x31, 0x04);
-    success &= i2c_write_addr8_data8(0x4B, 0x09);
-    success &= i2c_write_addr8_data8(0x4C, 0x05);
-    success &= i2c_write_addr8_data8(0x4D, 0x04);
-    success &= i2c_write_addr8_data8(0xFF, 0x00);
-    success &= i2c_write_addr8_data8(0x44, 0x00);
-    success &= i2c_write_addr8_data8(0x45, 0x20);
-    success &= i2c_write_addr8_data8(0x47, 0x08);
-    success &= i2c_write_addr8_data8(0x48, 0x28);
-    success &= i2c_write_addr8_data8(0x67, 0x00);
-    success &= i2c_write_addr8_data8(0x70, 0x04);
-    success &= i2c_write_addr8_data8(0x71, 0x01);
-    success &= i2c_write_addr8_data8(0x72, 0xFE);
-    success &= i2c_write_addr8_data8(0x76, 0x00);
-    success &= i2c_write_addr8_data8(0x77, 0x00);
-    success &= i2c_write_addr8_data8(0xFF, 0x01);
-    success &= i2c_write_addr8_data8(0x0D, 0x01);
-    success &= i2c_write_addr8_data8(0xFF, 0x00);
-    success &= i2c_write_addr8_data8(0x80, 0x01);
-    success &= i2c_write_addr8_data8(0x01, 0xF8);
-    success &= i2c_write_addr8_data8(0xFF, 0x01);
-    success &= i2c_write_addr8_data8(0x8E, 0x01);
-    success &= i2c_write_addr8_data8(0x00, 0x01);
-    success &= i2c_write_addr8_data8(0xFF, 0x00);
-    success &= i2c_write_addr8_data8(0x80, 0x00);
-    return success;
-}
-
-static bool configure_interrupt()
-{
-    /* Interrupt on new sample ready */
-    if (!i2c_write_addr8_data8(REG_SYSTEM_INTERRUPT_CONFIG_GPIO, 0x04)) {
-        return false;
-    }
-
-    /* Configure active low since the pin is pulled-up on most breakout boards */
-    uint8_t gpio_hv_mux_active_high = 0;
-    if (!i2c_read_addr8_data8(REG_GPIO_HV_MUX_ACTIVE_HIGH, &gpio_hv_mux_active_high)) {
-        return false;
-    }
-    gpio_hv_mux_active_high &= ~0x10;
-    if (!i2c_write_addr8_data8(REG_GPIO_HV_MUX_ACTIVE_HIGH, gpio_hv_mux_active_high)) {
-        return false;
-    }
-
-    if (!i2c_write_addr8_data8(REG_SYSTEM_INTERRUPT_CLEAR, 0x01)) {
-        return false;
-    }
-    return true;
-}
 
 
-/**
- * Enable (or disable) specific steps in the sequence
- */
-static bool set_sequence_steps_enabled(uint8_t sequence_step)
-{
-    return i2c_write_addr8_data8(REG_SYSTEM_SEQUENCE_CONFIG, sequence_step);
-}
 
-/**
- * Basic device initialization
- */
-static bool static_init()
-{
-    if (!set_spads_from_nvm()) {
-        return false;
-    }
-
-    if (!load_default_tuning_settings()) {
-        return false;
-    }
-
-    if (!configure_interrupt()) {
-        return false;
-    }
-
-    if (!set_sequence_steps_enabled(RANGE_SEQUENCE_STEP_DSS +
-                                    RANGE_SEQUENCE_STEP_PRE_RANGE +
-                                    RANGE_SEQUENCE_STEP_FINAL_RANGE)) {
-        return false;
-    }
-
-    return true;
-}
 
 static bool perform_single_ref_calibration(calibration_type_t calib_type)
 {
@@ -401,69 +259,7 @@ static bool perform_ref_calibration()
     return true;
 }
 
-static bool configure_address(uint8_t addr)
-{
-    /* 7-bit address */
-    return i2c_write_addr8_data8(REG_SLAVE_DEVICE_ADDRESS, addr & 0x7F);
-}
-
-/**
- * Sets the sensor in hardware standby by flipping the XSHUT pin.
- */
-static void set_hardware_standby(vl53l0x_idx_t idx, bool enable)
-{
-    gpio_set_output(vl53l0x_infos[idx].xshut_gpio, !enable);
-}
-
-/**
- * Configures the GPIOs used for the XSHUT pin.
- * Output low by default means the sensors will be in
- * hardware standby after this function is called.
- *
- * NOTE: The pins are hard-coded to P1.0, P1.1, and P1.2.
- **/
-static void configure_gpio()
-{
-    gpio_init();
-    gpio_set_output(GPIO_XSHUT_FIRST, false);
-    gpio_set_output(GPIO_XSHUT_SECOND, false);
-    gpio_set_output(GPIO_XSHUT_THIRD, false);
-}
 
 
-static bool init_config(vl53l0x_idx_t idx)
-{
-    i2c_set_slave_address(vl53l0x_infos[idx].addr);
-    if (!data_init()) {
-        return false;
-    }
-    if (!static_init()) {
-        return false;
-    }
-    if (!perform_ref_calibration()) {
-        return false;
-    }
-    return true;
-}
 
-bool vl53l0x_init()
-{
-    if (!init_addresses()) {
-        return false;
-    }
-    if (!init_config(VL53L0X_IDX_FIRST)) {
-        return false;
-    }
-#ifdef VL53L0X_SECOND
-    if (!init_config(VL53L0X_IDX_SECOND)) {
-        return false;
-    }
-#endif
-#ifdef VL53L0X_THIRD
-    if (!init_config(VL53L0X_IDX_THIRD)) {
-        return false;
-    }
-#endif
-    return true;
-}
 
