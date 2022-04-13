@@ -19,10 +19,17 @@ void init_i2c(void)
 * i2c_read_uint8_from_reg
 * i2c_read_uint16_from_reg
 *************************************************/
-void i2c_write_uint8_to_reg(const uint8_t i2c_addr, const uint8_t reg, const uint8_t val)
+
+/************************************************
+* verifierade:
+* i2c_write_uint8_to_reg
+* i2c_read_uint8_from_reg
+* i2c_read_uint16_from_reg
+*************************************************/
+bool i2c_write_uint8_to_reg(const uint8_t i2c_addr, const uint8_t reg, const uint8_t val)
 {
     uint8_t buf[] = {reg, val};
-    i2c_write_blocking(i2c_default, i2c_addr, buf, 2, false);
+    return i2c_write_blocking(i2c_default, i2c_addr, buf, 2, false);
 }
 
 uint8_t i2c_read_uint8_from_reg(const uint8_t i2c_addr, const uint8_t reg)

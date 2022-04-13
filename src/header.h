@@ -14,7 +14,6 @@
 #include "I2C.h"
 //#include <string.h>
 #include "pico/binary_info.h"
-#include "hardware/i2c.h"
 
 //Macros:
 #define SERVO_PIN 6 //GPIO 6 PWM Channel 3A
