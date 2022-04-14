@@ -47,3 +47,19 @@ uint16_t i2c_read_uint16_from_reg(const uint8_t i2c_addr, const uint8_t reg)
     i2c_read_blocking(i2c_default, i2c_addr, ret, 2, false);
     return ((ret[0] << 8) | (ret[1]));
 }
+
+uint32_t i2c_read_uint32_from_reg(const uint8_t i2c_addr, const uint8_t reg)
+{
+    uint8_t ret[4];
+    i2c_write_blocking(i2c_default, i2c_addr, &reg, 1, true);
+    i2c_read_blocking(i2c_default, i2c_addr, ret, 4, false);
+    return ((ret[0] << 24) | (ret[1] << 16) | (ret[2] << 8) | (ret[3]));
+}
+
+void i2c_read_bytes_from_reg(const uint8_t i2c_addr, const uint8_t reg, uint8_t no_of_bytes, uint8_t* ret_val )
+{
+    
+    i2c_write_blocking(i2c_default, i2c_addr, &reg, 1, true);
+    i2c_read_blocking(i2c_default, i2c_addr, ret_val, no_of_bytes, false);
+   
+}

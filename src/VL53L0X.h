@@ -72,6 +72,6 @@ typedef enum
 } calibration_type_t;
 
 VL53L0X new_VL53L0X(uint8_t xshut_gpio);
-bool assign_new_address(VL53L0X* self, uint8_t new_i2c_address)
-
+bool assign_new_address(VL53L0X* self, uint8_t new_i2c_address);
+uint16_t read_range(VL53L0X* self);
 #endif /* VL53L0X_H_ */
