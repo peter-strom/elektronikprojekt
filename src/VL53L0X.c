@@ -10,6 +10,8 @@ static bool set_spads_from_nvm(VL53L0X* self);
 static bool get_spad_info_from_nvm(VL53L0X* self, uint8_t *spad_count, uint8_t *spad_type, uint8_t good_spad_map[6]);
 static bool read_strobe(VL53L0X* self);
 static bool load_default_tuning_settings(VL53L0X* self);
+static bool perform_single_ref_calibration(VL53L0X* self,  calibration_type_t calib_type);
+static bool perform_ref_calibration(VL53L0X* self);
 
 VL53L0X new_VL53L0X(uint8_t xshut_gpio)
 {
@@ -23,6 +25,7 @@ VL53L0X new_VL53L0X(uint8_t xshut_gpio)
     gpio_put(xshut_gpio, true); 
     data_init(&self);
     static_init(&self);
+    perform_ref_calibration(&self);
     return self;
 }
 
@@ -72,9 +75,10 @@ bool assign_new_address(VL53L0X* self, uint8_t new_i2c_address)
     while (!device_is_booted(self)) {
     }
     // 7F == 0111 1111 -> 7-bit register
-    if (i2c_write_uint8_to_reg(self->i2c_address,REG_SLAVE_DEVICE_ADDRESS, new_i2c_address & 0x7F)) {
+    if (!i2c_write_uint8_to_reg(self->i2c_address,REG_SLAVE_DEVICE_ADDRESS, new_i2c_address & 0x7F)) {
         return false;
     }
+    self->i2c_address = new_i2c_address;
     return true;
 }
 //read range single 
@@ -455,10 +459,10 @@ static bool load_default_tuning_settings(VL53L0X* self)
 }    
 
 
-/*
 
 
-static bool perform_single_ref_calibration(calibration_type_t calib_type)
+
+static bool perform_single_ref_calibration(VL53L0X* self,  calibration_type_t calib_type)
 {
     uint8_t sysrange_start = 0;
     uint8_t sequence_config = 0;
@@ -473,51 +477,51 @@ static bool perform_single_ref_calibration(calibration_type_t calib_type)
         sysrange_start = 0x01 | 0x00;
         break;
     }
-    if (!i2c_write_addr8_data8(REG_SYSTEM_SEQUENCE_CONFIG, sequence_config)) {
+    if (!i2c_write_uint8_to_reg(self->i2c_address,REG_SYSTEM_SEQUENCE_CONFIG, sequence_config)) {
         return false;
     }
-    if (!i2c_write_addr8_data8(REG_SYSRANGE_START, sysrange_start)) {
+    if (!i2c_write_uint8_to_reg(self->i2c_address,REG_SYSRANGE_START, sysrange_start)) {
         return false;
     }
     // Wait for interrupt 
     uint8_t interrupt_status = 0;
-    bool success = false;
+    
     do {
-        success = i2c_read_addr8_data8(REG_RESULT_INTERRUPT_STATUS, &interrupt_status);
-    } while (success && ((interrupt_status & 0x07) == 0));
-    if (!success) {
-        return false;
-    }
-    if (!i2c_write_addr8_data8(REG_SYSTEM_INTERRUPT_CLEAR, 0x01)) {
+        interrupt_status = i2c_read_uint8_from_reg(self->i2c_address,REG_RESULT_INTERRUPT_STATUS);
+    } while ((interrupt_status & 0x07) == 0);
+ 
+    if (!i2c_write_uint8_to_reg(self->i2c_address,REG_SYSTEM_INTERRUPT_CLEAR, 0x01)) {
         return false;
     }
 
-    if (!i2c_write_addr8_data8(REG_SYSRANGE_START, 0x00)) {
+    if (!i2c_write_uint8_to_reg(self->i2c_address,REG_SYSRANGE_START, 0x00)) {
         return false;
     }
     return true;
 }
- */
+ 
 /**
  * Temperature calibration needs to be run again if the temperature changes by
  * more than 8 degrees according to the datasheet.
  */
-/*
-static bool perform_ref_calibration()
+
+static bool perform_ref_calibration(VL53L0X* self)
 {
-    if (!perform_single_ref_calibration(CALIBRATION_TYPE_VHV)) {
+    if (!perform_single_ref_calibration(self, CALIBRATION_TYPE_VHV)) {
         return false;
     }
-    if (!perform_single_ref_calibration(CALIBRATION_TYPE_PHASE)) {
+    if (!perform_single_ref_calibration(self, CALIBRATION_TYPE_PHASE)) {
         return false;
     }
     // Restore sequence steps enabled 
-    if (!set_sequence_steps_enabled(RANGE_SEQUENCE_STEP_DSS +
+   if(!i2c_write_uint8_to_reg(self->i2c_address, REG_SYSTEM_SEQUENCE_CONFIG, 
+                                    RANGE_SEQUENCE_STEP_DSS +
                                     RANGE_SEQUENCE_STEP_PRE_RANGE +
-                                    RANGE_SEQUENCE_STEP_FINAL_RANGE)) {
+                                    RANGE_SEQUENCE_STEP_FINAL_RANGE))
+    {
         return false;
     }
+    
     return true;
 }
 
-*/
