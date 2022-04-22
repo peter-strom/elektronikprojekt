@@ -22,10 +22,10 @@ VL53L0X new_VL53L0X(uint8_t xshut_gpio)
     //because the sensors use same i2c address (0x29)
     // we have to turn off all connected sensor by default
     // and activate them one by one while assigning the new address.
-    gpio_put(xshut_gpio, true); 
-    data_init(&self);
-    static_init(&self);
-    perform_ref_calibration(&self);
+    gpio_init(xshut_gpio);
+    gpio_set_dir(xshut_gpio, GPIO_OUT);
+    gpio_put(xshut_gpio, false); 
+   
     return self;
 }
 
@@ -69,18 +69,26 @@ static bool device_is_booted(VL53L0X* self)
  * */
 bool assign_new_address(VL53L0X* self, uint8_t new_i2c_address)
 {
+    //sleep_ms(300);
     //wake up sensor
-    gpio_put(self->xshut_gpio, false); 
+    gpio_put(self->xshut_gpio, true); 
     //wait till sensor starts
-    while (!device_is_booted(self)) {
-    }
+   //while (!device_is_booted(self)) {
+    //}
+    sleep_ms(300);
+   
     // 7F == 0111 1111 -> 7-bit register
     if (!i2c_write_uint8_to_reg(self->i2c_address,REG_SLAVE_DEVICE_ADDRESS, new_i2c_address & 0x7F)) {
         return false;
     }
     self->i2c_address = new_i2c_address;
+     data_init(self);
+    static_init(self);
+    perform_ref_calibration(self);
     return true;
 }
+
+
 //read range single 
 uint16_t read_range(VL53L0X* self)
 {

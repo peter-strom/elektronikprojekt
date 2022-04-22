@@ -11,16 +11,19 @@ int main() {
     //init_i2c();
     setup();
     
-     VL53L0X sensor = new_VL53L0X(7);
+    VL53L0X sensor = new_VL53L0X(7);
+    VL53L0X sensor2 = new_VL53L0X(21);
    
-    assign_new_address(&sensor, 0x29);
+   assign_new_address(&sensor, 0x30);
+   assign_new_address(&sensor2, 0x31);
     blink();
-    int16_t distance;
+    uint16_t distance,distance2;
 
     while (1) {
-   distance = read_range(&sensor);
-      printf("distance: %d\n", distance);
-      
+  distance = read_range(&sensor);
+  distance2 = read_range(&sensor2);
+    printf("distance: %u - ", distance);
+    printf("distance2: %u\n", distance2);
 
        //mpu6050_read_raw(acceleration, gyro, &temp);
 
