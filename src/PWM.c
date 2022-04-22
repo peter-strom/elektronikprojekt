@@ -33,12 +33,7 @@ PWM new_PWM(const uint8_t GPIO)
     self.throttle = 0x00;
     self.limit = 350;
    
-   
     
-    
-  
-  
-      
     pwm_set_enabled(self.slice, true);
     
     return self;
