@@ -17,20 +17,27 @@ PWM new_PWM(const uint8_t GPIO)
     gpio_set_function(GPIO, GPIO_FUNC_PWM);
     self.slice = pwm_gpio_to_slice_num(GPIO);
     self.channel = pwm_gpio_to_channel(GPIO);
-    
+
+     // Setting the clock devider (prescaler)
+    // 125 Mhz / 125 = 1Mhz = 1us
     self.divider = 125;
+    pwm_set_clkdiv(self.slice, (float)self.divider);
+
+       // Set the highest value the counter will reach before returning to 0
+     // 1us * 20000 = 20ms => vanliga servon 50Hz
+     // 1us * 4166 = 4,166ms => savox SH-0257MG 240Hz
     self.wrap = 20000;
+    pwm_set_wrap(self.slice, self.wrap);
+
     self.offset = 0;
     self.throttle = 0x00;
-    self.limit = 100;
+    self.limit = 350;
    
-    // Setting the clock devider (prescaler)
-    // 125 Mhz / 125 = 1Mhz = 1us
-    pwm_set_clkdiv(self.slice, (float)self.divider);
+   
     
-     // Set the highest value the counter will reach before returning to 0
-     // 1us * 20000 = 20ms
-    pwm_set_wrap(self.slice, self.wrap);
+    
+  
+  
       
     pwm_set_enabled(self.slice, true);
     

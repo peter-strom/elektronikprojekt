@@ -22,11 +22,13 @@
 #define VL53L0X_ADDRESS 0x29
 
 
+
 //global variables
 
 
 // Global functions:
 void setup(void);
 void blink(void);
+
 
 #endif /* HEADER_H_ */
