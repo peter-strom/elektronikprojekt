@@ -9,10 +9,16 @@ static uint16_t calc_duty_cycle(PWM* self, int8_t throttle);
  *          servo ~ 500
  *  1500 + offset +- limit
  *
- * *********************************************/
+ **********************************************/
+
+/**
+ * @brief Initialize an instance of a PWM-structure.
+ * 
+ * @param GPIO pin number for the connected device
+ * @return PWM Instance of a PWM-structure
+ */
 PWM new_PWM(const uint8_t GPIO)
 {
-   
     PWM self;
     gpio_set_function(GPIO, GPIO_FUNC_PWM);
     self.slice = pwm_gpio_to_slice_num(GPIO);
@@ -31,23 +37,21 @@ PWM new_PWM(const uint8_t GPIO)
 
     self.offset = 0;
     self.throttle = 0x00;
-    self.limit = 350;
-   
+    self.limit = 700;//350
     
     pwm_set_enabled(self.slice, true);
     
     return self;
 }
-/***********************************************
- * Fuction to change the speed of the car and 
- * prevents damageing the car when switching from 
- * reverse to forward.
+
+/**
+ * @brief Change rotation speed of motor.
+ * Prevents damageing the car when switching from reverse to forward.
+ * 0 = still, positive = forward, negative = reverse
  * 
- * int8_t throttle - a number between -100 to 100
- *                  where negative numbers are reverse 
- *                        zero or close to zero is off
- *                        positive is forward  
- * *********************************************/
+ * @param self Pointer address to the PWM instance.
+ * @param throttle integer between -100 to 100
+ */
 void set_speed(PWM* self, int8_t throttle)
 {
      if((self->throttle < 0 && throttle > 0) ||
@@ -62,12 +66,21 @@ void set_speed(PWM* self, int8_t throttle)
 }
 
 
-/***********************************************
- * Fuction to calculate the dutycycle.
+void set_steering_angle(PWM* self, int8_t angle)
+{
+    angle = angle -100;
+    printf("stering value: %d\n", angle);
+    pwm_set_chan_level(self->slice, self->channel, calc_duty_cycle(self, angle));
+}
+
+
+/**
+ * @brief Fuction to calculate the dutycycle.
  * 
- * int8_t throttle - a number between -100 to 100
- *
- * *********************************************/
+ * @param self Pointer address to the PWM instance.
+ * @param throttle Int between -100 and 100
+ * @return uint16_t 
+ */
 static uint16_t calc_duty_cycle(PWM* self, int8_t throttle)
 {
     return (1500 + self->offset + (self->limit * ((float)throttle/100))); 
