@@ -17,8 +17,14 @@
 #include "hardware/i2c.h"
 #include "VL53L0X.h"
 #include "I2C.h"
+#include "PID.h"
 //#include <string.h>
 #include "pico/binary_info.h"
+
+//use rp2040 highly optimized floating point librarys
+// 2.7.2. Floating-point Support (raspberry-pi-pico-c-sdk.pdf) 
+#include "pico/float.h"
+#include "pico/double.h"
 
 //GPIO Macros:
 #define SERVO_PIN 13 //GPIO 13 PWM Channel 6A
