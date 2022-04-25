@@ -17,7 +17,7 @@ static uint16_t calc_duty_cycle(PWM* self, int8_t throttle);
  * @param GPIO pin number for the connected device
  * @return PWM Instance of a PWM-structure
  */
-PWM new_PWM(const uint8_t GPIO)
+PWM new_PWM(const uint8_t GPIO, uint16_t wrap, uint8_t offset, uint8_t limit)
 {
     PWM self;
     gpio_set_function(GPIO, GPIO_FUNC_PWM);
@@ -32,12 +32,12 @@ PWM new_PWM(const uint8_t GPIO)
        // Set the highest value the counter will reach before returning to 0
      // 1us * 20000 = 20ms => vanliga servon 50Hz
      // 1us * 4166 = 4,166ms => savox SH-0257MG 240Hz
-    self.wrap = 20000;
+    self.wrap = wrap;
     pwm_set_wrap(self.slice, self.wrap);
 
-    self.offset = 0;
+    self.offset = offset;
     self.throttle = 0x00;
-    self.limit = 700;//350
+    self.limit = limit;//350
     
     pwm_set_enabled(self.slice, true);
     
