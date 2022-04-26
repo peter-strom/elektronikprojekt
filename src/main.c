@@ -34,14 +34,14 @@ int main() {
     */
       distance_front = read_range(&sensor_front);
       
-      
+      calc_speed()
     uint16_t max_input = 1000;
-    float percent;
+    float percent ;
     uint8_t break_distance = 50;
     uint8_t output_min = 30;
     uint8_t output_max = 50;
     uint8_t output_span = output_max - output_min;
-    uint8_t 
+    uint8_t output = 
       //esc_speed mellan 30 och 50
       //
       esc_speed = distance_front /10;
