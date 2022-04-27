@@ -17,7 +17,7 @@ static uint16_t calc_duty_cycle(PWM* self, int8_t throttle);
  * @param GPIO pin number for the connected device
  * @return PWM Instance of a PWM-structure
  */
-PWM new_PWM(const uint8_t GPIO, uint16_t wrap, uint8_t offset, uint8_t limit)
+PWM new_PWM(const uint8_t GPIO, uint16_t wrap, uint8_t offset, uint16_t limit)
 {
     PWM self;
     gpio_set_function(GPIO, GPIO_FUNC_PWM);

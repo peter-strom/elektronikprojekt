@@ -1,27 +1,18 @@
-#ifndef PWM_H_
-#define PWM_H_
+
+#ifndef SPEEDCTRL_H_
+#define SPEEDCTRL_H_
 #include "header.h"
-
-/************************************************************************
-GPIO SLICE CHANNEL
-28    6     A
-13    6     B 
-************************************************************************/
-typedef struct SpeedControl
+typedef struct SpeedCtrl
 {
-	//uint8_t GPIO;
-    uint8_t slice;
-    uint8_t channel;
-	uint8_t divider;
-    uint16_t wrap;
-	int16_t offset;
-    int8_t throttle;
-	uint16_t limit;
+    uint16_t max_input;
+    uint8_t break_distance;
+    uint8_t output_min;
+    uint8_t output_max;
+    uint8_t output_span;
 
-} PWM;
+} SpeedCtrl;
 
-PWM new_PWM(const uint8_t GPIO, uint16_t wrap, uint8_t offset, uint8_t limit);
-void set_speed(PWM* self, int8_t throttle);
-void set_steering_angle(PWM* self, int8_t angle);
+SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t break_distance, uint8_t output_min, uint8_t output_max);
+uint8_t SpeedCtrl_calc_speed(SpeedCtrl* self, int16_t sensor_input);
 
-#endif /* PWM_H_ */
+#endif /* SPEEDCTRL_H_ */

@@ -20,7 +20,7 @@ typedef struct PWM
 
 } PWM;
 
-PWM new_PWM(const uint8_t GPIO, uint16_t wrap, uint8_t offset, uint8_t limit);
+PWM new_PWM(const uint8_t GPIO, uint16_t wrap, uint8_t offset, uint16_t limit);
 void set_speed(PWM* self, int8_t throttle);
 void set_steering_angle(PWM* self, int8_t angle);
 

@@ -18,6 +18,7 @@
 #include "VL53L0X.h"
 #include "I2C.h"
 #include "PID.h"
+#include "SpeedCtrl.h"
 //#include <string.h>
 #include "pico/binary_info.h"
 

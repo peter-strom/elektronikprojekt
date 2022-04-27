@@ -1,12 +1,9 @@
 #ifndef VL53L0X_H_
 #define VL53L0X_H_
 #include "header.h"
-//https://github.com/artfulbytes/vl6180x_vl53l0x_msp430/blob/main/drivers/i2c.c
+
 /*
-* assign_new_address()
-* data_init()
-* static_init()
-* perform_ref_calibration()
+* port of https://github.com/artfulbytes/vl6180x_vl53l0x_msp430/blob/main/drivers/vl53l0x.c
 */
 
 #define REG_IDENTIFICATION_MODEL_ID (0xC0)
