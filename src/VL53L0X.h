@@ -1,10 +1,10 @@
 #ifndef VL53L0X_H_
 #define VL53L0X_H_
-#include "header.h"
+#include "definitions.h"
 
 /*
-* port of https://github.com/artfulbytes/vl6180x_vl53l0x_msp430/blob/main/drivers/vl53l0x.c
-*/
+ * port of https://github.com/artfulbytes/vl6180x_vl53l0x_msp430/blob/main/drivers/vl53l0x.c
+ */
 
 #define REG_IDENTIFICATION_MODEL_ID (0xC0)
 #define REG_VHV_CONFIG_PAD_SCL_SDA_EXTSUP_HV (0x89)
@@ -23,9 +23,9 @@
 #define REG_RESULT_RANGE_STATUS (0x14)
 #define REG_SLAVE_DEVICE_ADDRESS (0x8A)
 
-#define RANGE_SEQUENCE_STEP_TCC (0x10) /* Target CentreCheck */
+#define RANGE_SEQUENCE_STEP_TCC (0x10)  /* Target CentreCheck */
 #define RANGE_SEQUENCE_STEP_MSRC (0x04) /* Minimum Signal Rate Check */
-#define RANGE_SEQUENCE_STEP_DSS (0x28) /* Dynamic SPAD selection */
+#define RANGE_SEQUENCE_STEP_DSS (0x28)  /* Dynamic SPAD selection */
 #define RANGE_SEQUENCE_STEP_PRE_RANGE (0x40)
 #define RANGE_SEQUENCE_STEP_FINAL_RANGE (0x80)
 
@@ -51,9 +51,7 @@
 /* Since we start at 0xB4 (180), there are four quadrants (three aperture, one aperture),
  * and each quadrant contains 256 / 4 = 64 SPADs, and the third quadrant is non-aperture, the
  * offset to the aperture quadrant is (256 - 64 - 180) = 12 */
-#define SPAD_APERTURE_START_INDEX (12) 
-
-
+#define SPAD_APERTURE_START_INDEX (12)
 
 typedef struct VL53L0X
 {
@@ -69,6 +67,6 @@ typedef enum
 } calibration_type_t;
 
 VL53L0X new_VL53L0X(uint8_t xshut_gpio);
-bool assign_new_address(VL53L0X* self, uint8_t new_i2c_address);
-uint16_t read_range(VL53L0X* self);
+bool assign_new_address(VL53L0X *self, uint8_t new_i2c_address);
+uint16_t read_range(VL53L0X *self);
 #endif /* VL53L0X_H_ */

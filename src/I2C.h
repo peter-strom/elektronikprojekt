@@ -1,6 +1,6 @@
 #ifndef I2C_H_
 #define I2C_H_
-#include "header.h"
+#include "definitions.h"
 
 // Function Declarations
 void init_i2c(void);
