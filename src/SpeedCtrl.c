@@ -1,12 +1,14 @@
 #include "SpeedCtrl.h"
 /**
- * @brief
- *
- * @param max_input
- * @param break_distance
- * @param output_min
- * @param output_max
- * @return SpeedCtrl
+ * @brief Initialize an instance of a SpeedCtrl-structure.
+ * 
+ * @param max_input max value of sensor
+ * @param break_distance stop distance
+ * @param output_min min output value
+ * @param output_mid mid output value
+ * @param output_mid_percent where to implement mid value over max value
+ * @param output_max max output value
+ * @return SpeedCtrl Instance of a SpeedCtrl-structure
  */
 SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t break_distance, uint8_t output_min,
                         uint8_t output_mid, uint8_t output_mid_percent, uint8_t output_max)
@@ -21,6 +23,13 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t break_distance, uint8_t outp
     return self;
 }
 
+/**
+ * @brief Takes input value from from sensor and calculates a safe speed.
+ * 
+ * @param self Pointer address to the SpeedCtrl-instance.
+ * @param sensor_input sensor value 
+ * @return uint8_t 
+ */
 uint8_t SpeedCtrl_calc_speed(SpeedCtrl *self, int16_t sensor_input)
 {
     if (sensor_input > self->max_input)
