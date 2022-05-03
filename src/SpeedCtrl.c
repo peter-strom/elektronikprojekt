@@ -1,4 +1,7 @@
 #include "SpeedCtrl.h"
+
+void sanitize_input(SpeedCtrl* self, uint16_t* sensor_input);
+
 /**
  * @brief Initialize an instance of a SpeedCtrl-structure.
  * 
@@ -11,7 +14,7 @@
  * @return SpeedCtrl Instance of a SpeedCtrl-structure
  */
 SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t break_distance, uint8_t output_min,
-                        uint8_t output_mid, uint8_t output_mid_percent, uint8_t output_max)
+                        uint8_t output_mid, uint8_t output_mid_percent, uint8_t output_max, uint8_t min_side_distance)
 {
     SpeedCtrl self;
     self.max_input = max_input;
@@ -20,6 +23,7 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t break_distance, uint8_t outp
     self.output_mid = output_mid;
     self.output_mid_percent = output_mid_percent;
     self.output_max = output_max;
+    self.min_side_distance = min_side_distance;
     return self;
 }
 
@@ -30,12 +34,19 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t break_distance, uint8_t outp
  * @param sensor_input sensor value 
  * @return uint8_t 
  */
-uint8_t SpeedCtrl_calc_speed(SpeedCtrl *self, int16_t sensor_input)
+uint8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input)
 {
-    if (sensor_input > self->max_input)
-    {
-        sensor_input = self->max_input;
-    }
+ 
+       sanitize_input(self, &sensor_input);
+
+       if(left_sensor_input > right_sensor_input)
+       {
+           if(right_sensor_input < self->min_side_distance)
+            {
+                
+            }
+       }
+ 
     if (sensor_input > self->break_distance)
     {
         float input_percent = (float)sensor_input / self->max_input;
@@ -53,5 +64,14 @@ uint8_t SpeedCtrl_calc_speed(SpeedCtrl *self, int16_t sensor_input)
     else
     {
         return 0;
+    }
+}
+
+
+void sanitize_input(SpeedCtrl* self, uint16_t* sensor_input)
+{
+    if (sensor_input > self->max_input)
+    {
+        sensor_input = self->max_input;
     }
 }
