@@ -18,7 +18,7 @@ int main()
         distance_front = read_range(&sensor_front);
         servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right));
         set_steering_angle(&pwm_servo, servo_angle, true);
-        esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front);
+        esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front,distance_left, distance_right);
         set_speed(&pwm_esc, esc_speed);
 
         if (debug)
