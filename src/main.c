@@ -26,7 +26,7 @@ int main()
             printf("distance_left: %u - ", distance_left);
             printf("distance_right: %u -", distance_right);
             printf("distance_front: %d -", distance_front);
-            printf("servo_angle: %d \n", servo_angle);
+            printf("servo_angle: %d ", servo_angle);
             printf("speedctrl_output: %d \n", esc_speed);
         }
         //sleep_ms(2);

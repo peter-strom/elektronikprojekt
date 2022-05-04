@@ -77,8 +77,6 @@ void set_steering_angle(PWM *self, int8_t angle, bool invert)
     {
         angle = angle * -1;
     }
-
-    printf("stering value: %d\n", angle);
     pwm_set_chan_level(self->slice, self->channel, calc_duty_cycle(self, angle));
 }
 

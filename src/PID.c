@@ -123,7 +123,6 @@ double PID_get_servo_value_from_sensors(PID *self, const double new_left_sensor_
     map_input(self);
     self->actual_value = self->target + self->mapped_left_sensor_input - self->mapped_right_sensor_input;
     regulate(self);
-    printf("output: %f\n", self->output);
     return self->output;
 }
 
