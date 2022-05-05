@@ -32,6 +32,7 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t break_distance, uint8_t outp
  */
 uint8_t SpeedCtrl_calc_speed(SpeedCtrl *self, int16_t sensor_input)
 {
+    uint8_t output_span;
     if (sensor_input > self->max_input)
     {
         sensor_input = self->max_input;
@@ -41,13 +42,12 @@ uint8_t SpeedCtrl_calc_speed(SpeedCtrl *self, int16_t sensor_input)
         float input_percent = (float)sensor_input / self->max_input;
         if (input_percent <= self->output_mid_percent)
         {
-            uint8_t output_span = self->output_mid - self->output_min;
+            output_span = self->output_mid - self->output_min;
         }
         else
         {
-            uint8_t output_span = self->output_max - self->output_min;
+            output_span = self->output_max - self->output_min;
         }
-        uint8_t output_span = self->output_max - self->output_min;
         return (uint8_t)((output_span * input_percent) + self->output_min);
     }
     else
