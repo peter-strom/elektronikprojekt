@@ -3,6 +3,7 @@
 double sanitize_input(PID *self, double sensor_input);
 void map_input(PID *self);
 void sanitize_output(PID *self);
+void sanitize_integral(PID *self);
 void regulate(PID *self);
 void print(PID *self);
 
@@ -13,12 +14,14 @@ void print(PID *self);
  * @param Kp Proportional gain constant.
  * @param Ki Integral gain constant.
  * @param Kd Derivative gain constant.
+ * @param Dt Derative time constant.
  * @param output_min min steering angle in degrees
  * @param output_max max steering angle in degrees
+ * @param integral_limit limit the integral value
  * @return PID instance of a PID-structure
  */
-PID new_PID(const double target, const double Kp, const double Ki,
-            const double Kd, const double output_min, const double output_max)
+PID new_PID(const double target, const double Kp, const double Ki, const double Kd, const double Dt,
+            const double output_min, const double output_max, const double integral_limit)
 {
     PID self;
     self.target = target;
@@ -27,8 +30,11 @@ PID new_PID(const double target, const double Kp, const double Ki,
     self.Kp = Kp;
     self.Ki = Ki;
     self.Kd = Kd;
+    self.Dt = Dt;
     self.sensor_max = 1023.0;
     self.sensor_min = 0.0;
+    self.integral_max = integral_limit;
+    self.integral_min = integral_limit * -1;
 
     self.actual_value = 0;
     self.output = 0;
@@ -93,6 +99,23 @@ void sanitize_output(PID *self)
 }
 
 /**
+ * @brief prevents output data from subceed/exceed the min/max allowed value.
+ *
+ * @param self Pointer address to the PID instance
+ */
+void sanitize_integral(PID *self)
+{
+    if (self->integral > self->integral_max)
+    {
+        self->integral = self->integral_max;
+    }
+    else if (self->integral < self->integral_min)
+    {
+        self->integral = self->integral_min;
+    }
+}
+
+/**
  * @brief Where the PID control regulation happens
  *
  * @param self Pointer address to the PID instance
@@ -100,11 +123,14 @@ void sanitize_output(PID *self)
 void regulate(PID *self)
 {
     self->current_error = self->target - self->actual_value;
-    self->integral += self->current_error;
-    self->derivative = self->current_error - self->previous_error;
-    self->output = self->target + self->Kp * self->current_error +
-                   self->Ki * self->integral + self->Kd * self->derivative;
+    self->integral += self->Ki * self->current_error * self->Dt;
+    sanitize_integral(self); // get stuck fix
+
+    self->derivative = self->Kd * (self->current_error - self->previous_error) / self->Dt;
+    self->output = self->target + self->Kp * self->current_error + self->integral + self->derivative;
+
     sanitize_output(self);
+
     self->previous_error = self->current_error;
 }
 
@@ -133,28 +159,6 @@ double PID_get_servo_value_from_sensors(PID *self, const double new_left_sensor_
  */
 void print(PID *self)
 {
-    printf("----------------------------------------------------------------------------\n");
-    printf("Target value: %f\n", self->target);
-    printf("Actual value: %f\n", self->actual_value);
-    printf("Output: %f\n", self->output);
-    printf("Current error: %f\n", self->current_error);
-    printf("previous error: %f\n", self->previous_error);
-    printf("----------------------------------------------------------------------------\n\n");
-    printf("Left input: %f\n", self->left_sensor_input);
-    printf("Right input: %f\n", self->right_sensor_input);
-    printf("Mapped left input: %f\n", self->mapped_left_sensor_input);
-    printf("Mapped right input: %f\n", self->mapped_right_sensor_input);
-    printf("----------------------------------------------------------------\n");
-    if (self->output > self->target)
-    {
-        printf("unit driving: %f degrees to the right\n\n", self->output - self->target);
-    }
-    else if (self->output < self->target)
-    {
-        printf("unit driving: %f degrees to the left\n\n", self->target - self->output);
-    }
-    else
-    {
-        printf("unit driving: streight ahead\n\n");
-    }
+    printf("integral: %f - \t", self->integral);
+    printf("derivative: %f - \t", self->derivative);
 }
