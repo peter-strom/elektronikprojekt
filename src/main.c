@@ -4,12 +4,12 @@ int main()
 {
     setup();
 
-    blink();
     uint16_t distance_left;
     uint16_t distance_right;
     uint16_t distance_front;
     int8_t esc_speed;
     uint8_t servo_angle;
+    gpio_put(LED_BUILTIN, 1);
     while (true)
     {
         if (gpio_get(START_MODULE))

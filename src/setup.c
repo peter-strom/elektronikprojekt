@@ -20,7 +20,7 @@ void setup()
     //pid_servo = new_PID(100, 1.8, 0.001, 0.04, 0, 200);
     pid_servo = new_PID(100, 1.8, 0.001, 0.04, 0.004, 0, 200,1000);
     //speed_ctrl = new_SpeedCtrl(1000, 50, 30, 37, 90, 65, 150,-30);
-    speed_ctrl = new_SpeedCtrl(1000, 90, 33, 42, 90, 72, 250,-60);
+    speed_ctrl = new_SpeedCtrl(1000, 90, 33, 48, 90, 65, 150,-60);
     assign_new_address(&sensor_left, 0x30);
     assign_new_address(&sensor_right, 0x31);
     assign_new_address(&sensor_front, 0x32);
