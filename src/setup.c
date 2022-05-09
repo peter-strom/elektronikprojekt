@@ -4,6 +4,11 @@ void setup()
 {
     gpio_init(LED_BUILTIN);
     gpio_set_dir(LED_BUILTIN, GPIO_OUT);
+
+    gpio_set_function(START_MODULE, GPIO_FUNC_SIO);
+    gpio_set_dir(START_MODULE, GPIO_IN);
+    gpio_is_pulled_down(START_MODULE);
+
     init_i2c();
     stdio_init_all();
 

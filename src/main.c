@@ -12,31 +12,38 @@ int main()
     uint8_t servo_angle;
     while (true)
     {
-      
-        distance_left = read_range(&sensor_left);
-        distance_right = read_range(&sensor_right);
-        distance_front = read_range(&sensor_front);
-        servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right));
-        esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right);
-        if (esc_speed < 0)
+        if (gpio_get(START_MODULE))
         {
-            if (servo_angle > 100 && servo_angle < 140)
+            distance_left = read_range(&sensor_left);
+            distance_right = read_range(&sensor_right);
+            distance_front = read_range(&sensor_front);
+            servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right));
+            esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right);
+            if (esc_speed < 0)
             {
-                servo_angle = 200;
+                if (servo_angle > 100 && servo_angle < 140)
+                {
+                    servo_angle = 200;
+                }
+                else if (servo_angle <= 100 && servo_angle > 60)
+                {
+                    servo_angle = 0;
+                }
+                set_steering_angle(&pwm_servo, servo_angle, false);
             }
-            else if (servo_angle <= 100 && servo_angle > 60)
+            else
             {
-                servo_angle = 0;
+                set_steering_angle(&pwm_servo, servo_angle, true);
             }
-            set_steering_angle(&pwm_servo, servo_angle, false);
+            set_speed(&pwm_esc, esc_speed);
         }
         else
         {
-            set_steering_angle(&pwm_servo, servo_angle, true);
+            set_speed(&pwm_esc, 0);
+            set_steering_angle(&pwm_servo, 0, true);
         }
-        set_speed(&pwm_esc, esc_speed);
 
-          if (debug)
+        if (debug)
         {
 
             print(&pid_servo);
@@ -47,8 +54,6 @@ int main()
             printf("speedctrl_output: %d \n", esc_speed);
             sleep_ms(200);
         }
-
-        
     }
 
     return 0;

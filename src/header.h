@@ -21,6 +21,7 @@
 #define TOF_SENSOR_L 20
 #define TOF_SENSOR_F 18
 #define TOF_SENSOR_R 16
+#define START_MODULE 26
 
 // global variables
 VL53L0X sensor_left;
