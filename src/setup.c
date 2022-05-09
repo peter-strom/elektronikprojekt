@@ -12,9 +12,10 @@ void setup()
     sensor_front = new_VL53L0X(TOF_SENSOR_F);
     pwm_servo = new_PWM(SERVO_PIN, 4166, 90, 450);
     pwm_esc = new_PWM(ESC_PIN, 20000, 0, 100);
-    //pid_servo = new_PID(100, 0.8, 0.001, 0.04, 0, 200);
-    pid_servo = new_PID(100, 0.8, 0.001, 0.01, 0, 200);
-    speed_ctrl = new_SpeedCtrl(1000, 50, 30, 37, 90, 65);
+    //pid_servo = new_PID(100, 1.2, 0.001, 0.04, 0, 200);
+    pid_servo = new_PID(100, 1.5, 0.001, 0.2, 0, 200);
+    //speed_ctrl = new_SpeedCtrl(1000, 50, 30, 37, 90, 65, 150,-30);
+    speed_ctrl = new_SpeedCtrl(1000, 50, 30, 37, 90, 65, 150,-30);
     assign_new_address(&sensor_left, 0x30);
     assign_new_address(&sensor_right, 0x31);
     assign_new_address(&sensor_front, 0x32);
