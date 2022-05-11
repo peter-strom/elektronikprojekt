@@ -10,12 +10,12 @@
 #include "PWM.h"
 
 #include "VL53L0X.h"
-
+#include "LSM6DSOX.h"
 #include "PID.h"
 #include "SpeedCtrl.h"
 
 // GPIO Macros:
-#define SERVO_PIN 13 // GPIO 13 PWM Channel 6A
+#define SERVO_PIN 14 // GPIO 13 PWM Channel 6A
 #define ESC_PIN 28   // GPIO 28 PWM Channel 6B
 #define LED_BUILTIN 6
 #define TOF_SENSOR_L 20
@@ -27,11 +27,13 @@
 VL53L0X sensor_left;
 VL53L0X sensor_right;
 VL53L0X sensor_front;
+LSM6DSOX imu;
 PWM pwm_servo;
 PWM pwm_esc;
 PID pid_servo;
 SpeedCtrl speed_ctrl;
-bool debug;
+bool debug_pid;
+bool debug_imu;
 // Global functions:
 void setup(void);
 void blink(void);

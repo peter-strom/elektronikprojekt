@@ -43,7 +43,7 @@ int main()
             set_steering_angle(&pwm_servo, 0, true);
         }
 
-        if (debug)
+        if (debug_pid)
         {
 
             print(&pid_servo);
@@ -54,6 +54,23 @@ int main()
             printf("speedctrl_output: %d \n", esc_speed);
             sleep_ms(200);
         }
+        if (debug_imu)
+        {
+            if(gyroscopeAvailable(&imu))
+            {
+                readAcceleration(&imu);
+                printf("acc: \t %g - \t %g - \t %g - \t ", imu.acc_x, imu.acc_y, imu.acc_z);
+            }
+                readGyroscope(&imu);
+                printf("gyro: \t %g - \t %g - \t %g  \n ", imu.gyro_x, imu.gyro_y, imu.gyro_z); 
+            
+            readTemperature(&imu);
+            
+           // printf("temperature: %d\n",imu.temperature);
+             
+            sleep_ms(200);
+        }
+
     }
 
     return 0;
