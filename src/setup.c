@@ -18,9 +18,9 @@ void setup()
     pwm_servo = new_PWM(SERVO_PIN, 4166, 90, 450);
     pwm_esc = new_PWM(ESC_PIN, 20000, 0, 100);
     //pid_servo = new_PID(100, 1.8, 0.001, 0.04, 0, 200);
-    pid_servo = new_PID(100, 1.8, 0.001, 0.04, 0.004, 0, 200,1000);
+    pid_servo = new_PID(100, 1.8, 0.001, 0.06, 0.004, 0, 200,1000);
     //speed_ctrl = new_SpeedCtrl(1000, 50, 30, 37, 90, 65, 150,-30);
-    speed_ctrl = new_SpeedCtrl(1000, 90, 33, 48, 90, 65, 150,-60);
+    speed_ctrl = new_SpeedCtrl(1000, 90, 33, 55, 90, 72, 150,-60);
     assign_new_address(&sensor_left, 0x30);
     assign_new_address(&sensor_right, 0x31);
     assign_new_address(&sensor_front, 0x32);
