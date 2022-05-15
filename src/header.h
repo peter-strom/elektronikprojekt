@@ -10,7 +10,7 @@
 #include "PWM.h"
 
 #include "VL53L0X.h"
-#include "LSM6DSOX.h"
+#include "MPU6050.h"
 #include "PID.h"
 #include "SpeedCtrl.h"
 
@@ -27,13 +27,14 @@
 VL53L0X sensor_left;
 VL53L0X sensor_right;
 VL53L0X sensor_front;
-LSM6DSOX imu;
+MPU6050 imu;
 PWM pwm_servo;
 PWM pwm_esc;
 PID pid_servo;
 SpeedCtrl speed_ctrl;
 bool debug_pid;
 bool debug_imu;
+uint32_t prev_time;
 // Global functions:
 void setup(void);
 void blink(void);

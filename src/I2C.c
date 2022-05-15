@@ -9,10 +9,9 @@
 void init_i2c(void)
 {
     i2c_init(i2c_default, 400 * 1000);
-    //gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
-    //gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(12, GPIO_FUNC_I2C);
-    gpio_set_function(13, GPIO_FUNC_I2C);
+    gpio_set_function(PICO_DEFAULT_I2C_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C);
+  
     // Make the I2C pins available to picotool ??
     bi_decl(bi_2pins_with_func(PICO_DEFAULT_I2C_SDA_PIN, PICO_DEFAULT_I2C_SCL_PIN, GPIO_FUNC_I2C));
 }
@@ -52,7 +51,7 @@ uint8_t i2c_read_uint8_from_reg(const uint8_t i2c_addr, const uint8_t reg)
  *
  * @param i2c_addr The physical address of the i2c devie (8-bit)
  * @param reg The register on the i2c device to read from.
- * @return uint8_t
+ * @return uint16_t
  */
 uint16_t i2c_read_uint16_from_reg(const uint8_t i2c_addr, const uint8_t reg)
 {
@@ -67,7 +66,7 @@ uint16_t i2c_read_uint16_from_reg(const uint8_t i2c_addr, const uint8_t reg)
  *
  * @param i2c_addr The physical address of the i2c devie (8-bit)
  * @param reg The register on the i2c device to read from.
- * @return uint8_t
+ * @return uint32_t
  */
 uint32_t i2c_read_uint32_from_reg(const uint8_t i2c_addr, const uint8_t reg)
 {

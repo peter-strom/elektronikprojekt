@@ -78,7 +78,7 @@ void LSM6DSOXClass::end()
 }
 **/
 
-void readAcceleration(LSM6DSOX *self)
+void LSM_read_acceleration(LSM6DSOX *self)
 {
     int8_t data[6];
     i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUTX_L_XL, 6, (uint8_t*)data);
@@ -87,7 +87,7 @@ void readAcceleration(LSM6DSOX *self)
     self->acc_z = ((data[5] << 8) | (data[4])) * 4.0 / 32768.0;
 }
 
-void readGyroscope(LSM6DSOX *self)
+void LSM_read_gyroscope(LSM6DSOX *self)
 {
     int8_t data[6];
     i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUTX_L_G, 6, (uint8_t*)data);
@@ -96,7 +96,7 @@ void readGyroscope(LSM6DSOX *self)
     self->gyro_z = ((data[5] << 8) | (data[4])) * 2000.0 / 32768.0;
 }
 
-void readTemperature(LSM6DSOX *self)
+void LSM_read_temperature(LSM6DSOX *self)
 {
     int8_t data[2];
     i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUT_TEMP_L, 2, (uint8_t*)data);
@@ -105,7 +105,7 @@ void readTemperature(LSM6DSOX *self)
     self->temperature = (((data[1] << 8) | (data[0])) / TEMPERATURE_LSB_per_DEG) + TEMPERATURE_OFFSET_DEG;
 }
 
-bool accelerationAvailable(LSM6DSOX *self)
+bool acceleration_available(LSM6DSOX *self)
 {
     if (i2c_read_uint8_from_reg(self->i2c_address, LSM6DSOX_STATUS_REG) & 0x01)
     {
@@ -114,7 +114,7 @@ bool accelerationAvailable(LSM6DSOX *self)
     return false;
 }
 
-bool gyroscopeAvailable(LSM6DSOX *self)
+bool gyroscope_available(LSM6DSOX *self)
 {
     if (i2c_read_uint8_from_reg(self->i2c_address, LSM6DSOX_STATUS_REG) & 0x02)
     {
@@ -123,7 +123,7 @@ bool gyroscopeAvailable(LSM6DSOX *self)
     return false;
 }
 
-bool temperatureAvailable(LSM6DSOX *self)
+bool temperature_available(LSM6DSOX *self)
 {
     if (i2c_read_uint8_from_reg(self->i2c_address, LSM6DSOX_STATUS_REG) & 0x04)
     {

@@ -10,9 +10,26 @@ int main()
     uint16_t distance_front;
     int8_t esc_speed;
     uint8_t servo_angle;
+    uint32_t curr_time;
+    float delta_time;
+    gpio_put(LED_BUILTIN, 1);
     while (true)
     {
-        if (gpio_get(START_MODULE))
+        
+        curr_time = get_absolute_time();
+        if(prev_time==0)
+        {
+            delta_time = 0.004;
+        }
+        else
+        {
+        delta_time = (curr_time-prev_time)/(float)1000000;
+        }
+        prev_time = curr_time; 
+        
+       calc_orientation(&imu, delta_time);
+        read_temperature(&imu);
+        if (!gpio_get(START_MODULE))
         {
             distance_left = read_range(&sensor_left);
             distance_right = read_range(&sensor_right);
@@ -54,21 +71,22 @@ int main()
             printf("speedctrl_output: %d \n", esc_speed);
             sleep_ms(200);
         }
+
         if (debug_imu)
         {
-            if(gyroscopeAvailable(&imu))
-            {
-                readAcceleration(&imu);
-                printf("acc: \t %g - \t %g - \t %g - \t ", imu.acc_x, imu.acc_y, imu.acc_z);
-            }
-                readGyroscope(&imu);
-                printf("gyro: \t %g - \t %g - \t %g  \n ", imu.gyro_x, imu.gyro_y, imu.gyro_z); 
+           
+                
+          //printf("%g\t\t%g\t%g\t%g\t\t%g\n", imu.gyro_error_x, imu.gyro_error_y, imu.gyro_error_z, imu.acc_error_x,imu.acc_error_y);
+          //printf("%g\t\t%g\t%g\n", imu.acc_x, imu.acc_y, imu.acc_z);
+          //printf("%g\t\t%g\t%g\t%g\n", imu.roll, imu.pitch, imu.yaw, delta_time);
+          printf("%g\t%g\n", imu.pitch, imu.acc_error_y);
+          //printf("temperature: %g \n", imu.temperature);
+           //sleep_ms(200);
+           
             
-            readTemperature(&imu);
-            
-           // printf("temperature: %d\n",imu.temperature);
+         
              
-            sleep_ms(200);
+            
         }
 
     }

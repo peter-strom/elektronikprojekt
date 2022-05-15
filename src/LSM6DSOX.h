@@ -60,9 +60,9 @@ typedef struct LSM6DSOX
 } LSM6DSOX;
 
 LSM6DSOX new_LSM6DSOX();
-void readAcceleration(LSM6DSOX *self);
-void readGyroscope(LSM6DSOX *self);
-void readTemperature(LSM6DSOX *self);
-bool accelerationAvailable(LSM6DSOX *self);
-bool gyroscopeAvailable(LSM6DSOX *self);
-bool temperatureAvailable(LSM6DSOX *self);
+void LSM_read_acceleration(LSM6DSOX *self);
+void LSM_read_gyroscope(LSM6DSOX *self);
+void LSM_read_temperature(LSM6DSOX *self);
+bool acceleration_available(LSM6DSOX *self);
+bool gyroscope_available(LSM6DSOX *self);
+bool temperature_available(LSM6DSOX *self);
