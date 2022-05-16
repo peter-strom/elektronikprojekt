@@ -14,14 +14,14 @@ int main()
     while (true)
     {
         delta_time = calc_delta_time(&prev_time);
-        if (gpio_get(START_MODULE))
+        if (!gpio_get(START_MODULE))
         {
 
             distance_left = read_range(&sensor_left);
             distance_right = read_range(&sensor_right);
             distance_front = read_range(&sensor_front);
-            servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right));
-            esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right);
+            servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right, delta_time));
+            esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right, servo_angle);
             if (speed_ctrl.reverse)
             {
                 if (servo_angle > 100 && servo_angle < 140)
@@ -48,7 +48,7 @@ int main()
 
         // printf("left: %u -\n ", speed_ctrl.rev_count);
 
-        
+        printf("left: \t%d -\t ", servo_angle);
         if (debug)
         {
 

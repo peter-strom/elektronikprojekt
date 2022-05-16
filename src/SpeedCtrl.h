@@ -27,6 +27,6 @@ typedef struct SpeedCtrl
 SpeedCtrl new_SpeedCtrl(uint16_t max_input,  uint8_t output_min, uint8_t output_mid, 
                         uint8_t mid_range_limit, uint8_t output_max, uint8_t min_side_distance,
                         int8_t reverse_output, uint8_t rev_trigger_distance, uint8_t rev_stop_distance);
-int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input);
+int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle);
 
 #endif /* SPEEDCTRL_H_ */
