@@ -2,6 +2,7 @@
 
 static uint16_t sanitize_sensor_input(SpeedCtrl *self, uint16_t sensor_input);
 static void reverse_switch(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input);
+static float get_factor_from_servo_angle(uint8_t servo_angle);
 
 /**
  * @brief Initialize an instance of a SpeedCtrl-structure.
@@ -54,40 +55,26 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t output_min, uint8_t output_m
  * @param front_sensor_input sensor value
  * @param left_sensor_input sensor value
  * @param right_sensor_input sensor value
+ * @param servo_angle value between 0 and 200 where 100 is streight forward
  * @return int8_t
  */
-int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input)
+int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle)
 {
     uint16_t side_sensor_input;
     uint8_t output_span;
     front_sensor_input = sanitize_sensor_input(self, front_sensor_input);
     left_sensor_input = sanitize_sensor_input(self, left_sensor_input);
     right_sensor_input = sanitize_sensor_input(self, right_sensor_input);
-
+    float curve_slowdown_factor = get_factor_from_servo_angle(servo_angle);
     reverse_switch(self, front_sensor_input, left_sensor_input, right_sensor_input);
     if (self->reverse)
     {
         return (int8_t)self->reverese_output;
     }
 
-/**
-    if (left_sensor_input >= right_sensor_input)
-    {
-        side_sensor_input = right_sensor_input;
-    }
-    else
-    {
-        side_sensor_input = left_sensor_input;
-    }
 
 
-    if (side_sensor_input < self->min_side_distance)
-    {
-        float input_percent = (float)side_sensor_input / self->min_side_distance;
-        output_span = self->output_mid - self->output_min;
-        return (int8_t)((output_span * input_percent) + self->output_min);
-    }
-*/
+
     float input_percent = (float)front_sensor_input / self->max_input;
     if (input_percent >= self->mid_range_limit)
     {
@@ -168,5 +155,26 @@ static void reverse_switch(SpeedCtrl *self, uint16_t front_sensor_input, uint16_
     }
     else{
         self->rev_count = 0;
+    }
+}
+
+static float get_factor_from_servo_angle(uint8_t servo_angle)
+{
+    if(servo_angle > 100)
+    {
+        servo_angle = 200 - servo_angle;
+    }
+
+    if(servo_angle >= 50)
+    {
+        return 1.0;
+    }
+    if(servo_angle < 50 && servo_angle >= 30 )
+    {
+        return 0.8;
+    }
+     if(servo_angle < 30 )
+    {
+        return 0.75;
     }
 }
