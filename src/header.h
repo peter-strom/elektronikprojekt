@@ -21,6 +21,7 @@
 #define TOF_SENSOR_L 20
 #define TOF_SENSOR_F 18
 #define TOF_SENSOR_R 16
+#define START_MODULE 26
 
 // global variables
 VL53L0X sensor_left;
@@ -31,8 +32,10 @@ PWM pwm_esc;
 PID pid_servo;
 SpeedCtrl speed_ctrl;
 bool debug;
+uint64_t prev_time;
 // Global functions:
 void setup(void);
 void blink(void);
+float calc_delta_time(uint64_t* prev_time);
 
 #endif /* HEADER_H_ */
