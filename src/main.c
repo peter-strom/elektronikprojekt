@@ -80,7 +80,7 @@ int main()
           //printf("%g\t\t%g\t%g\n", imu.acc_x, imu.acc_y, imu.acc_z);
           //printf("%g\t\t%g\t%g\t%g\n", imu.roll, imu.pitch, imu.yaw, delta_time);
           printf("%g\t%g\n", imu.pitch, imu.acc_error_y);
-          //printf("temperature: %g \n", imu.temperature);
+          printf("temperature: %g \n", imu.temperature);
            //sleep_ms(200);
            
             
