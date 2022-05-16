@@ -14,12 +14,13 @@ int main()
     {
         if (gpio_get(START_MODULE))
         {
+
             distance_left = read_range(&sensor_left);
             distance_right = read_range(&sensor_right);
             distance_front = read_range(&sensor_front);
             servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right));
             esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right);
-            if (esc_speed < 0)
+            if (speed_ctrl.reverse)
             {
                 if (servo_angle > 100 && servo_angle < 140)
                 {
@@ -43,15 +44,18 @@ int main()
             set_steering_angle(&pwm_servo, 0, true);
         }
 
+        // printf("left: %u -\n ", speed_ctrl.rev_count);
+
         if (debug)
         {
 
             print(&pid_servo);
-            printf("distance_left: %u - \t ", distance_left);
-            printf("distance_right: %u - \t", distance_right);
-            printf("distance_front: %d - \t", distance_front);
-            printf("servo_angle: %d - \t", servo_angle);
-            printf("speedctrl_output: %d \n", esc_speed);
+            printf("left: \t%u -\t ", distance_left);
+            printf("right: \t%u - \t", distance_right);
+            printf("front: \t%u - \t", distance_front);
+            printf("integral: \t%f \t", pid_servo.integral);
+            printf("servo_angle: \t%d - \t", servo_angle);
+            printf("output: \t%d \n", esc_speed);
             sleep_ms(200);
         }
     }
