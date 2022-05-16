@@ -24,7 +24,7 @@ int main()
             distance_right = read_range(&sensor_right);
             distance_front = read_range(&sensor_front);
             servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right, delta_time));
-            esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right, servo_angle);
+            esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right, servo_angle, &imu);
             if (speed_ctrl.reverse)
             {
                 if (servo_angle > 100 && servo_angle < 140)
@@ -70,8 +70,8 @@ int main()
           //printf("%g\t\t%g\t%g\t%g\t\t%g\n", imu.gyro_error_x, imu.gyro_error_y, imu.gyro_error_z, imu.acc_error_x,imu.acc_error_y);
           //printf("%g\t\t%g\t%g\n", imu.acc_x, imu.acc_y, imu.acc_z);
           //printf("%g\t\t%g\t%g\t%g\n", imu.roll, imu.pitch, imu.yaw, delta_time);
-          printf("%g\t%g\n", imu.pitch, imu.acc_error_y);
-          printf("temperature: %g \n", imu.temperature);
+          printf("%g\t%g\n", imu.pitch, delta_time);
+          //printf("temperature: %g \n", imu.temperature);
            //sleep_ms(200);
            
             

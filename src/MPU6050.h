@@ -1,6 +1,7 @@
 // https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/
 
 #include "definitions.h"
+
 #define MPU6050_ADDRESS 0x68
 
 #define MPU6050_PWR_MGMT_1 0x6B
@@ -51,6 +52,9 @@ typedef struct MPU6050
     float yaw;
     float roll;
     float pitch;
+    float pitch_sum;
+    uint16_t pitch_sum_count;
+    uint16_t pitch_sum_max;
 } MPU6050;
 
 MPU6050 new_MPU6050();

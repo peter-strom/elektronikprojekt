@@ -47,6 +47,9 @@ MPU6050 new_MPU6050()
     self.yaw = 0.0;
     self.roll = 0.0;
     self.pitch = 0.0;
+    self.pitch_sum = 0.0;
+    self.pitch_sum_count = 0;
+    self.pitch_sum_max = 400 ;
     init(&self);
     return self;
 }
@@ -122,6 +125,8 @@ void read_temperature(MPU6050 *self)
  */
 void calc_orientation(MPU6050 *self, float dt)
 {
+    pitch_reset(self);
+
     read_acceleration(self);
     read_gyroscope(self);
     float acc_ang_x = ((atanf((self->acc_y) / sqrtf(powf((self->acc_x), 2) + powf((self->acc_z), 2))) * 180 / PI)+self->acc_error_x);
@@ -133,5 +138,25 @@ void calc_orientation(MPU6050 *self, float dt)
     self->yaw += (self->gyro_z + self->gyro_error_z) * dt;
     //self->roll = 0.96 * self->gyro_angle_x +0.04 * acc_ang_x;
     //self->pitch = 0.96 * self->gyro_angle_y +0.04 * acc_ang_y;
+    
+}
+
+
+void pitch_reset(MPU6050 * self)
+{
+    if(self->pitch_sum_count++ < self->pitch_sum_max)
+    {
+        self->pitch_sum += self->pitch;
+    }
+    else
+    {
+        
+        if((self->pitch_sum / self->pitch_sum_max ) >= (self->pitch - 1) || (self->pitch_sum / self->pitch_sum_max ) <= (self->pitch + 1))
+        {
+            self->pitch = 0.0;
+        }
+        self->pitch_sum_count = 0;
+        self->pitch_sum = 0.0;
+    }
     
 }
