@@ -2,6 +2,7 @@
 
 static void init(MPU6050 *self);
 static void calc_IMU_error(MPU6050 *self);
+static void pitch_reset(MPU6050 * self);
 
 
 /**
@@ -142,7 +143,7 @@ void calc_orientation(MPU6050 *self, float dt)
 }
 
 
-void pitch_reset(MPU6050 * self)
+static void pitch_reset(MPU6050 * self)
 {
     if(self->pitch_sum_count++ < self->pitch_sum_max)
     {

@@ -1,5 +1,5 @@
 #include "SpeedCtrl.h"
-#include "MPU6050.h"
+
 static uint16_t sanitize_sensor_input(SpeedCtrl *self, uint16_t sensor_input);
 static void reverse_switch(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input);
 static float get_factor_from_servo_angle(uint8_t servo_angle);
@@ -58,7 +58,7 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t output_min, uint8_t output_m
  * @param servo_angle value between 0 and 200 where 100 is streight forward
  * @return int8_t
  */
-int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle, MPU6050 *imu)
+int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle)
 {
     uint16_t side_sensor_input;
     uint8_t output_span;
@@ -95,10 +95,7 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
     }
     */
 
-    if (imu->pitch > 40)
-    {
-        self->pwr_output = true;
-    }
+ 
 
     if (self->pwr_output)
     {

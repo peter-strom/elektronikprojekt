@@ -24,7 +24,7 @@ int main()
             distance_right = read_range(&sensor_right);
             distance_front = read_range(&sensor_front);
             servo_angle = ((uint8_t)PID_get_servo_value_from_sensors(&pid_servo, distance_left, distance_right, delta_time));
-            esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right, servo_angle, &imu);
+            esc_speed = SpeedCtrl_calc_speed(&speed_ctrl, distance_front, distance_left, distance_right, servo_angle);
             if (speed_ctrl.reverse)
             {
                 if (servo_angle > 100 && servo_angle < 140)
