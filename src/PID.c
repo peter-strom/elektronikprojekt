@@ -20,7 +20,7 @@ void print(PID *self);
  * @param integral_limit limit the integral value
  * @return PID instance of a PID-structure
  */
-PID new_PID(const double target, const double Kp, const double Ki, const double Kd, const double Dt,
+PID new_PID(const double target, const double Kp, const double Ki, const double Kd,
             const double output_min, const double output_max, const double integral_limit)
 {
     PID self;
@@ -30,7 +30,7 @@ PID new_PID(const double target, const double Kp, const double Ki, const double 
     self.Kp = Kp;
     self.Ki = Ki;
     self.Kd = Kd;
-    self.Dt = Dt;
+    self.Dt = 0.0;
     self.sensor_max = 1023.0;
     self.sensor_min = 0.0;
     self.integral_max = integral_limit;
@@ -140,10 +140,12 @@ void regulate(PID *self)
  * @param self address to the PID instance
  * @param new_left_sensor_input value from the left sensor
  * @param new_right_sensor_input value from the right sensor
+ * @param dt Delta time
  * @return double
  */
-double PID_get_servo_value_from_sensors(PID *self, const double new_left_sensor_input, const double new_right_sensor_input)
+double PID_get_servo_value_from_sensors(PID *self, const double new_left_sensor_input, const double new_right_sensor_input, const float dt)
 {
+    self->Dt = dt;
     self->left_sensor_input = sanitize_input(self, new_left_sensor_input);
     self->right_sensor_input = sanitize_input(self, new_right_sensor_input);
     map_input(self);

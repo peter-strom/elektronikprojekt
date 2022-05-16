@@ -9,10 +9,12 @@ int main()
     uint16_t distance_front;
     int8_t esc_speed;
     uint8_t servo_angle;
+    float delta_time;
     gpio_put(LED_BUILTIN, 1);
     while (true)
     {
-        if (gpio_get(START_MODULE))
+        delta_time = calc_delta_time(&prev_time);
+        if (!gpio_get(START_MODULE))
         {
 
             distance_left = read_range(&sensor_left);
@@ -46,6 +48,7 @@ int main()
 
         // printf("left: %u -\n ", speed_ctrl.rev_count);
 
+        printf("left: \t%g -\t ", delta_time);
         if (debug)
         {
 
