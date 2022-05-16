@@ -16,7 +16,7 @@
 #include "MPU6050.h"
 
 // GPIO Macros:
-#define SERVO_PIN 14 // GPIO 13 PWM Channel 6A
+#define SERVO_PIN 13 // GPIO 13 PWM Channel 6A
 #define ESC_PIN 28   // GPIO 28 PWM Channel 6B
 #define LED_BUILTIN 6
 #define TOF_SENSOR_L 20

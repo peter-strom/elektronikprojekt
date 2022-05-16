@@ -37,7 +37,7 @@ MPU6050 new_MPU6050()
     self.acc_error_x = 0.0;
     self.acc_error_y = 0.0; 
     self.gyro_error_x = 0.0; 
-    self.gyro_error_y = 0.44195;
+    self.gyro_error_y = 2.24321;//test = 0.44195;
     self.gyro_error_z = 0.0;
     self.gyro_sensitivity_sel = 0x00;
     self.gyro_scale_factor = 131.0;
@@ -50,7 +50,7 @@ MPU6050 new_MPU6050()
     self.pitch = 0.0;
     self.pitch_sum = 0.0;
     self.pitch_sum_count = 0;
-    self.pitch_sum_max = 400 ;
+    self.pitch_sum_max = 1000 ;
     init(&self);
     return self;
 }
@@ -152,7 +152,9 @@ static void pitch_reset(MPU6050 * self)
     else
     {
         
-        if((self->pitch_sum / self->pitch_sum_max ) >= (self->pitch - 1) || (self->pitch_sum / self->pitch_sum_max ) <= (self->pitch + 1))
+        if((self->pitch_sum / (float)self->pitch_sum_max ) >= (self->pitch - 1.0)
+
+         && (self->pitch_sum / (float)self->pitch_sum_max ) <= (self->pitch + 1.0))
         {
             self->pitch = 0.0;
         }

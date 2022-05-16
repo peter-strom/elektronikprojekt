@@ -58,7 +58,7 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t output_min, uint8_t output_m
  * @param servo_angle value between 0 and 200 where 100 is streight forward
  * @return int8_t
  */
-int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle)
+int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle, float pitch_value)
 {
     uint16_t side_sensor_input;
     uint8_t output_span;
@@ -87,17 +87,32 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
         output_span = self->output_max - self->output_min;
     }
     uint8_t output = (int8_t)((output_span * input_percent) + self->output_min) * curve_slowdown_factor;
-
-    /**
+    if (output < self->output_min)
+    {
+        output = self->output_min;
+    }
+    
     if((front_sensor_input == self->max_input) && (self->old_output < 40))
     {
       self->pwr_output = true;
     }
-    */
+    
+    if(pitch_value >= 35)
+    {
+      self->pwr_output = false;
 
- 
+      return 0;
+    }
+    else if (pitch_value < 35 && pitch_value >= 9 )
+    {
+        self->pwr_output = true;
+    }
+    else
+    {
+        self->pwr_output = false;
+    }
 
-    if (self->pwr_output)
+     if (self->pwr_output)
     {
 
         if ((self->pwr_count++ == self->pwr_count_max) || !self->pwr_output)
@@ -175,11 +190,11 @@ static float get_factor_from_servo_angle(uint8_t servo_angle)
 
     if (servo_angle < 50 && servo_angle >= 30)
     {
-        return 0.9;
+        return 1;
     }
     if (servo_angle < 30)
     {
-        return 0.7;
+        return 0.85;
     }
     return 1.0;
 }
