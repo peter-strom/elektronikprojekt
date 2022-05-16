@@ -29,7 +29,7 @@ typedef struct PID
     double mapped_left_sensor_input;
 } PID;
 
-PID new_PID(const double target, const double Kp, const double Ki, const double Kd, const double Dt,
+PID new_PID(const double target, const double Kp, const double Ki, const double Kd,
             const double output_min, const double output_max,const double integral_limit);
 
 double PID_get_servo_value_from_sensors(PID *self, const double new_left_sensor_input, const double new_right_sensor_input);
