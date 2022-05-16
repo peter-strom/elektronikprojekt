@@ -66,13 +66,16 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
     left_sensor_input = sanitize_sensor_input(self, left_sensor_input);
     right_sensor_input = sanitize_sensor_input(self, right_sensor_input);
     float curve_slowdown_factor = get_factor_from_servo_angle(servo_angle);
+    if((curve_slowdown_factor < 0.8) && self->pwr_output)
+    {
+        self->pwr_output = false; 
+    } 
+
     reverse_switch(self, front_sensor_input, left_sensor_input, right_sensor_input);
     if (self->reverse)
     {
         return (int8_t)self->reverese_output;
     }
-
-
 
 
     float input_percent = (float)front_sensor_input / self->max_input;
@@ -84,7 +87,7 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
     {
         output_span = self->output_max - self->output_min;
     }
-    uint8_t output = (int8_t)((output_span * input_percent) + self->output_min);
+    uint8_t output = (int8_t)((output_span * input_percent) + self->output_min)*curve_slowdown_factor;
 
     if((front_sensor_input == self->max_input) && (self->old_output < 40))
     {
@@ -93,7 +96,7 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
     if(self->pwr_output)
     {
         
-        if (self->pwr_count++ == self->pwr_count_max)
+        if ((self->pwr_count++ == self->pwr_count_max) || !self->pwr_output)
             {
                 self->pwr_output = false;
                 self->pwr_count = 0;
@@ -165,16 +168,13 @@ static float get_factor_from_servo_angle(uint8_t servo_angle)
         servo_angle = 200 - servo_angle;
     }
 
-    if(servo_angle >= 50)
-    {
-        return 1.0;
-    }
     if(servo_angle < 50 && servo_angle >= 30 )
     {
-        return 0.8;
+        return 0.9;
     }
      if(servo_angle < 30 )
     {
-        return 0.75;
+        return 0.7;
     }
+    return 1.0;
 }
