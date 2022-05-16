@@ -32,11 +32,14 @@ PWM pwm_servo;
 PWM pwm_esc;
 PID pid_servo;
 SpeedCtrl speed_ctrl;
+
 bool debug_pid;
 bool debug_imu;
-uint32_t prev_time;
+uint64_t prev_time;
+
 // Global functions:
 void setup(void);
 void blink(void);
+float calc_delta_time(uint64_t* prev_time);
 
 #endif /* HEADER_H_ */
