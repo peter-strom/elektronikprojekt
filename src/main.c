@@ -14,7 +14,7 @@ int main()
     while (true)
     {
         delta_time = calc_delta_time(&prev_time);
-        if (!gpio_get(START_MODULE))
+        if (gpio_get(START_MODULE))
         {
 
             distance_left = read_range(&sensor_left);
@@ -48,7 +48,7 @@ int main()
 
         // printf("left: %u -\n ", speed_ctrl.rev_count);
 
-        printf("left: \t%g -\t ", delta_time);
+        
         if (debug)
         {
 
