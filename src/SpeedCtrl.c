@@ -47,7 +47,7 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t output_min, uint8_t output_m
  * @details (remember gear protector in PWM.c:set_speed)
  * -obstacle solving via reverse_switch()
  * -curve control via get_factor_from_servo_angle()
- * -variable speed control based on the front sensors non linear distance to obstacle
+ * -non linear variable speed control based on the front sensors distance to obstacle
  * -power mode if the car detects an uphill or drastic removal of obstacle in front of the car
  * NOTE: Only about one hour testing with IMU sensor, probably some bugs left to fix related to the power-mode
  * @param self Pointer address to the SpeedCtrl-instance.
