@@ -19,7 +19,7 @@ static void pitch_reset(MPU6050 *self);
  * acc_sensitivity_sel  0x00    0x08    0x10    0x18
  * gyro_scale_factor     16384   8192    4096    2048
  *
- * NOTE: Only about one hour testing with IMU sensor
+ * NOTE: Only about one hour was spent testing the IMU sensor
  */
 MPU6050 new_MPU6050()
 {
@@ -150,7 +150,7 @@ void read_temperature(MPU6050 *self)
 /**
  * @brief experimental function to calculates yaw, roll and pitch
  * @details tried different methoods to calculate non drifting sensor values.
- * NOTE: Only about one hour testing with IMU sensor
+ * NOTE: Only about one hour was spent testing the IMU sensor
  *
  * @param self
  * @param dt Delta time
@@ -179,7 +179,7 @@ void calc_orientation(MPU6050 *self, float dt)
  * Assumes that the car stands flat when
  * the sum of no_of_measurements / no_of_measurements
  * is approximately equal to one of the measurements
- * NOTE: Only about one hour testing with IMU sensor
+ * NOTE: Only about one hour was spent testing the IMU sensor
  *
  * @param self
  */

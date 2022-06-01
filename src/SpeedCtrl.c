@@ -49,12 +49,12 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t output_min, uint8_t output_m
  * -curve control via get_factor_from_servo_angle()
  * -non linear variable speed control based on the front sensors distance to obstacle
  * -power mode if the car detects an uphill or drastic removal of obstacle in front of the car
- * NOTE: Only about one hour testing with IMU sensor, probably some bugs left to fix related to the power-mode
+ * NOTE: Only about one hour was spent testing the IMU sensor , probably some bugs left to fix related to the power-mode
  * @param self Pointer address to the SpeedCtrl-instance.
  * @param front_sensor_input sensor value
  * @param left_sensor_input sensor value
  * @param right_sensor_input sensor value
- * @param servo_angle value between 0 and 200 where 100 is streight forward
+ * @param servo_angle value between 0 and 200 where 100 is straight forward
  * @return int8_t
  */
 int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle, float pitch_value)
