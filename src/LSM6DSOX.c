@@ -1,23 +1,21 @@
-/*
-  This file is part of the Arduino_LSM6DSOX library.
-  Copyright (c) 2021 Arduino SA. All rights reserved.
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+/***************************************************************************
+ * port based on the Arduino_LSM6DSOX library
+ * https://github.com/arduino-libraries/Arduino_LSM6DSOX/tree/master/src
+ *
+ * Did never use the embedded IMU (LSM6DSOX) in this project due to issues
+ * with simultaneous connection to external i2c devices.
+ * Probably easy to fix. But the MPU6050 was within reach.
+ ***************************************************************************/
 
 #include "LSM6DSOX.h"
 
 static bool init(LSM6DSOX *self);
 
+/**
+ * @brief Initialize an instance of a LSM6DSOX-structure.
+ *
+ * @return LSM6DSOX
+ */
 LSM6DSOX new_LSM6DSOX()
 {
     LSM6DSOX self;
@@ -34,19 +32,13 @@ LSM6DSOX new_LSM6DSOX()
     return self;
 }
 
+/**
+ * @brief Initiates LSM6DSOX
+ *
+ * @param self
+ */
 static bool init(LSM6DSOX *self)
 {
-    /**
-    if (i2c_read_uint8_from_reg(self->i2c_address, LSM6DSOX_WHO_AM_I_REG) != 0x6C)
-    {
-        for(int i = 0 ; i<30;i++)
-        {
-            blink();
-        }
-        // end(self);
-        return false;
-    }
-**/
     // set the gyroscope control register to work at 104 Hz, 2000 dps and in bypass mode
     i2c_write_uint8_to_reg(self->i2c_address, LSM6DSOX_CTRL2_G, 0x4C);
 
@@ -64,70 +56,43 @@ static bool init(LSM6DSOX *self)
 }
 
 /**
-void LSM6DSOXClass::end()
-{
-  if (_spi != NULL) {
-    _spi->end();
-    digitalWrite(_csPin, LOW);
-    pinMode(_csPin, INPUT);
-  } else {
-    writeRegister(LSM6DSOX_CTRL2_G, 0x00);
-    writeRegister(LSM6DSOX_CTRL1_XL, 0x00);
-    _wire->end();
-  }
-}
-**/
-
+ * @brief function to read acceleration
+ * little-endian
+ * @param self
+ */
 void LSM_read_acceleration(LSM6DSOX *self)
 {
     int8_t data[6];
-    i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUTX_L_XL, 6, (uint8_t*)data);
+    i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUTX_L_XL, 6, (uint8_t *)data);
     self->acc_x = ((data[1] << 8) | (data[0])) * 4.0 / 32768.0;
     self->acc_y = ((data[3] << 8) | (data[2])) * 4.0 / 32768.0;
     self->acc_z = ((data[5] << 8) | (data[4])) * 4.0 / 32768.0;
 }
 
+/**
+ * @brief function to read gyro
+ * little-endian
+ * @param self
+ */
 void LSM_read_gyroscope(LSM6DSOX *self)
 {
     int8_t data[6];
-    i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUTX_L_G, 6, (uint8_t*)data);
+    i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUTX_L_G, 6, (uint8_t *)data);
     self->gyro_x = ((data[1] << 8) | (data[0])) * 2000.0 / 32768.0;
     self->gyro_y = ((data[3] << 8) | (data[2])) * 2000.0 / 32768.0;
     self->gyro_z = ((data[5] << 8) | (data[4])) * 2000.0 / 32768.0;
 }
 
+/**
+ * @brief function to read temperature
+ * little-endian
+ * @param self
+ */
 void LSM_read_temperature(LSM6DSOX *self)
 {
     int8_t data[2];
-    i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUT_TEMP_L, 2, (uint8_t*)data);
+    i2c_read_bytes_from_reg(self->i2c_address, LSM6DSOX_OUT_TEMP_L, 2, (uint8_t *)data);
     static int const TEMPERATURE_LSB_per_DEG = 256;
     static int const TEMPERATURE_OFFSET_DEG = 25;
     self->temperature = (((data[1] << 8) | (data[0])) / TEMPERATURE_LSB_per_DEG) + TEMPERATURE_OFFSET_DEG;
-}
-
-bool acceleration_available(LSM6DSOX *self)
-{
-    if (i2c_read_uint8_from_reg(self->i2c_address, LSM6DSOX_STATUS_REG) & 0x01)
-    {
-        return true;
-    }
-    return false;
-}
-
-bool gyroscope_available(LSM6DSOX *self)
-{
-    if (i2c_read_uint8_from_reg(self->i2c_address, LSM6DSOX_STATUS_REG) & 0x02)
-    {
-        return true;
-    }
-    return false;
-}
-
-bool temperature_available(LSM6DSOX *self)
-{
-    if (i2c_read_uint8_from_reg(self->i2c_address, LSM6DSOX_STATUS_REG) & 0x04)
-    {
-        return true;
-    }
-    return false;
 }

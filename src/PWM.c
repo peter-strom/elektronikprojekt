@@ -56,7 +56,7 @@ void set_speed(PWM *self, int8_t throttle)
         (self->throttle > 0 && throttle < 0))
     {
         pwm_set_chan_level(self->slice, self->channel, calc_duty_cycle(self, 0));
-        //sleep_ms(200);
+        // sleep_ms(200);
     }
 
     self->throttle = throttle;

@@ -3,7 +3,10 @@
 #include "definitions.h"
 
 /*
- * port of https://github.com/artfulbytes/vl6180x_vl53l0x_msp430/blob/main/drivers/vl53l0x.c
+ * port based of the great work of Niklas "artfulbytes" found on github
+ * lots of comments from his work.
+ * https://github.com/artfulbytes/vl6180x_vl53l0x_msp430/blob/main/drivers/vl53l0x.c
+ *
  */
 
 #define REG_IDENTIFICATION_MODEL_ID (0xC0)

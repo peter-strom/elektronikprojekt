@@ -1,16 +1,9 @@
-/**
- * pinouts: https://docs.google.com/spreadsheets/d/14GNT5NQsH8dopmf7zK-Uy6bziWoMnjxaaNdR6yWJy5o/edit#gid=0
- *
- */
-
 #ifndef HEADER_H_
 #define HEADER_H_
 
 #include "definitions.h"
 #include "PWM.h"
-
 #include "VL53L0X.h"
-
 #include "PID.h"
 #include "SpeedCtrl.h"
 #include "MPU6050.h"
@@ -38,9 +31,9 @@ bool debug_pid;
 bool debug_imu;
 uint64_t prev_time;
 
-// Global functions:
+// Global functions (setup.c):
 void setup(void);
 void blink(void);
-float calc_delta_time(uint64_t* prev_time);
+float calc_delta_time(uint64_t *prev_time);
 
 #endif /* HEADER_H_ */

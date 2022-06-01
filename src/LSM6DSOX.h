@@ -1,20 +1,11 @@
-/*
-  This file is part of the Arduino_LSM6DSOX library.
-  Copyright (c) 2021 Arduino SA. All rights reserved.
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
-  https://github.com/arduino-libraries/Arduino_LSM6DSOX/tree/master/src
-*/
+/***************************************************************************
+ * port based on the Arduino_LSM6DSOX library
+ * https://github.com/arduino-libraries/Arduino_LSM6DSOX/tree/master/src
+ *
+ * Did never use the embedded IMU (LSM6DSOX) in this project due to issues
+ * with simultaneous connection to external i2c devices.
+ * Probably easy to fix. But the MPU6050 was within reach.
+ ***************************************************************************/
 #define LSM6DSOX_ADDRESS 0x6A
 
 #define LSM6DSOX_WHO_AM_I_REG 0X0F
@@ -48,15 +39,15 @@
 
 typedef struct LSM6DSOX
 {
-    uint8_t i2c_address;
-    float sample_rate;
-    float acc_x;
-    float acc_y;
-    float acc_z;
-    float gyro_x;
-    float gyro_y;
-    float gyro_z;
-    int temperature;
+  uint8_t i2c_address;
+  float sample_rate;
+  float acc_x;
+  float acc_y;
+  float acc_z;
+  float gyro_x;
+  float gyro_y;
+  float gyro_z;
+  int temperature;
 } LSM6DSOX;
 
 LSM6DSOX new_LSM6DSOX();

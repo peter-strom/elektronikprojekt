@@ -1,3 +1,10 @@
+/*
+ * port based of the great work of Niklas "artfulbytes" found on github
+ * lots of comments from his work.
+ * https://github.com/artfulbytes/vl6180x_vl53l0x_msp430/blob/main/drivers/vl53l0x.c
+ *
+ */
+
 #include "VL53L0X.h"
 
 static void data_init(VL53L0X *self);
@@ -11,15 +18,23 @@ static bool load_default_tuning_settings(VL53L0X *self);
 static bool perform_single_ref_calibration(VL53L0X *self, calibration_type_t calib_type);
 static bool perform_ref_calibration(VL53L0X *self);
 
+/**
+ * @brief Initialize an instance of a VL53L0X-structure
+ * @details
+ * Because the sensors use same i2c address (0x29)
+ * we must turn off all connected sensors by default
+ * and activate them one by one while assigning a new temporary
+ * address with fuction assign_new_address()
+ * @param xshut_gpio
+ * @return VL53L0X
+ */
 VL53L0X new_VL53L0X(uint8_t xshut_gpio)
 {
     VL53L0X self;
     self.i2c_address = 0x29;
     self.xshut_gpio = xshut_gpio;
     self.stop_variable = 0x00;
-    // because the sensors use same i2c address (0x29)
-    //  we have to turn off all connected sensor by default
-    //  and activate them one by one while assigning the new address.
+
     gpio_init(xshut_gpio);
     gpio_set_dir(xshut_gpio, GPIO_OUT);
     gpio_put(xshut_gpio, false);
@@ -28,8 +43,9 @@ VL53L0X new_VL53L0X(uint8_t xshut_gpio)
 }
 
 /**
- * Device initialization
- * return stop_variable
+ * @brief Initiates VL53L0X
+ *
+ * @param self
  */
 static void data_init(VL53L0X *self)
 {
@@ -50,29 +66,17 @@ static void data_init(VL53L0X *self)
 }
 
 /**
- * Simple function to check if device is booted
- * REF_REG is a referense register according to datsheet
+ * @brief starting the sensor and assigning a new i2c address
+ * @details
+ * the new address is active until reboot.
+ * @param self
+ * @param new_i2c_address the prefered i2c address
+ * @return bool
+ *
  */
-static bool device_is_booted(VL53L0X *self)
-{
-    if (!i2c_read_uint8_from_reg(self->i2c_address, REF_REG))
-    {
-        return false;
-    }
-    return true;
-}
-
-/* The fuction assigns a new i2c-adress to the sensor.
- * all other sensors attached need to be disabled by the xshut-pin.
- * */
 bool assign_new_address(VL53L0X *self, uint8_t new_i2c_address)
 {
-    // sleep_ms(300);
-    // wake up sensor
     gpio_put(self->xshut_gpio, true);
-    // wait till sensor starts
-    // while (!device_is_booted(self)) {
-    // }
     sleep_ms(300);
 
     // 7F == 0111 1111 -> 7-bit register
@@ -84,6 +88,19 @@ bool assign_new_address(VL53L0X *self, uint8_t new_i2c_address)
     data_init(self);
     static_init(self);
     perform_ref_calibration(self);
+    return true;
+}
+
+/**
+ * Simple function to check if device is booted
+ * REF_REG is a referense register according to datsheet
+ */
+static bool device_is_booted(VL53L0X *self)
+{
+    if (!i2c_read_uint8_from_reg(self->i2c_address, REF_REG))
+    {
+        return false;
+    }
     return true;
 }
 
@@ -117,12 +134,6 @@ uint16_t read_range(VL53L0X *self)
     i2c_read_uint16_from_reg(self->i2c_address, 0x51);
     i2c_write_uint8_to_reg(self->i2c_address, REG_SYSTEM_INTERRUPT_CLEAR, 0x01); // 0x0B
 
-    /*
-    //8190 or 8191 may be returned when obstacle is out of range.
-   if (*range == 8190 || *range == 8191) {
-       *range = VL53L0X_OUT_OF_RANGE;
-   }
-   */
     return result;
 }
 
@@ -301,39 +312,6 @@ static bool get_spad_info_from_nvm(VL53L0X *self, uint8_t *spad_count, uint8_t *
     }
     *spad_count = (tmp_data32 >> 8) & 0x7f;
     *spad_type = (tmp_data32 >> 15) & 0x01;
-
-    /* Since the good SPAD map is already stored in REG_GLOBAL_CONFIG_SPAD_ENABLES_REF_0
-     * we can simply read that register instead of doing the below */
-#if 0
-    /* Get the first part of the SPAD map */
-    if (!i2c_write_uint8_to_reg(self->i2c_address, 0x94, 0x24)) {
-        return false;
-    }
-    if (!read_strobe()) {
-        return false;
-    }
-    if (!i2c_read_addr8_data32(0x90, &tmp_data32)) {
-      return false;
-    }
-    good_spad_map[0] = (uint8_t)((tmp_data32 >> 24) & 0xFF);
-    good_spad_map[1] = (uint8_t)((tmp_data32 >> 16) & 0xFF);
-    good_spad_map[2] = (uint8_t)((tmp_data32 >> 8) & 0xFF);
-    good_spad_map[3] = (uint8_t)(tmp_data32 & 0xFF);
-
-    /* Get the second part of the SPAD map */
-    if (!i2c_write_uint8_to_reg(self->i2c_address, 0x94, 0x25)) {
-        return false;
-    }
-    if (!read_strobe()) {
-        return false;
-    }
-    if (!i2c_read_addr8_data32(0x90, &tmp_data32)) {
-        return false;
-    }
-    good_spad_map[4] = (uint8_t)((tmp_data32 >> 24) & 0xFF);
-    good_spad_map[5] = (uint8_t)((tmp_data32 >> 16) & 0xFF);
-
-#endif
 
     /* Restore after reading from NVM */
     success &= i2c_write_uint8_to_reg(self->i2c_address, 0x81, 0x00);

@@ -1,5 +1,3 @@
-// https://howtomechatronics.com/tutorials/arduino/arduino-and-mpu6050-accelerometer-and-gyroscope-tutorial/
-
 #include "definitions.h"
 
 #define MPU6050_ADDRESS 0x68
@@ -26,7 +24,6 @@
 #define MPU6050_OUTZ_L_XL 0x40
 #define PI 3.1415
 
-
 typedef struct MPU6050
 {
     uint8_t i2c_address;
@@ -39,8 +36,8 @@ typedef struct MPU6050
     float gyro_z;
     float temperature;
     float acc_error_x;
-    float acc_error_y; 
-    float gyro_error_x; 
+    float acc_error_y;
+    float gyro_error_x;
     float gyro_error_y;
     float gyro_error_z;
     uint8_t gyro_sensitivity_sel;
