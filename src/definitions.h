@@ -13,7 +13,7 @@
 #include "I2C.h"
 
 // use rp2040 highly optimized floating point librarys
-//  2.7.2. Floating-point Support (raspberry-pi-pico-c-sdk.pdf)
+// 2.7.2. Floating-point Support (raspberry-pi-pico-c-sdk.pdf)
 #include "pico/float.h"
 #include "pico/double.h"
 

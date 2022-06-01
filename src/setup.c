@@ -1,5 +1,9 @@
 #include "header.h"
 
+/**
+ * @brief initializing GPIOs, structs and others
+ *
+ */
 void setup()
 {
     gpio_init(LED_BUILTIN);
@@ -15,20 +19,25 @@ void setup()
     sensor_left = new_VL53L0X(TOF_SENSOR_L);
     sensor_right = new_VL53L0X(TOF_SENSOR_R);
     sensor_front = new_VL53L0X(TOF_SENSOR_F);
+    imu = new_MPU6050();
+
     pwm_servo = new_PWM(SERVO_PIN, 4166, 90, 450);
     pwm_esc = new_PWM(ESC_PIN, 20000, 0, 100);
-    // pid_servo = new_PID(100, 1.5, 0.001, 0.08, 0, 200, 1000);
     pid_servo = new_PID(100, 1.5, 0.001, 0.08, 0, 200, 1000);
-    // speed_ctrl = new_SpeedCtrl(1000, 33, 55, 90, 72, 150,-60, 70, 140);
     speed_ctrl = new_SpeedCtrl(1000, 33, 50, 90, 72, 0, -60, 60, 140);
+
     assign_new_address(&sensor_left, 0x30);
     assign_new_address(&sensor_right, 0x31);
     assign_new_address(&sensor_front, 0x32);
 
-    debug = false;
+    debug_pid = false;
+    debug_imu = false;
 }
 
-// function used for debuging
+/**
+ * @brief simple blink function used for debuging
+ *
+ */
 void blink()
 {
     gpio_put(LED_BUILTIN, 1);
@@ -37,6 +46,15 @@ void blink()
     sleep_ms(1050);
 }
 
+/**
+ * @brief calculates delta time
+ * @details 
+ * Calculates the difference between two timestamps and
+ * updates previous time stamp with current timestamp.
+ * 
+ * @param prev_time the previous timestamp to compare with
+ * @return float delta time in seconds 
+ */
 float calc_delta_time(uint64_t *prev_time)
 {
     uint64_t current_time = get_absolute_time();

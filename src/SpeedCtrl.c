@@ -37,28 +37,27 @@ SpeedCtrl new_SpeedCtrl(uint16_t max_input, uint8_t output_min, uint8_t output_m
     self.rev_count_max = 500;
     self.old_output = 0;
     self.pwr_count = 0;
-    self.pwr_count_max =130;
+    self.pwr_count_max = 130;
     self.pwr_output = false;
     return self;
 }
 
 /**
- * @brief Takes input value from from sensor and calculates a safe speed.
- * @details
- * (remember gear protector in PWM.c:set_speed)
- * if any sensor values is lower than rev_trigger_distance => return reverse_output
- *      until the sensor value is higher than rev_stop_distance
- * if any side_sensors values is lower than min_side_distance => slow down
- * if front sensor value is higher than mid_range_value => apply output_max as highest available speed
- * if front sensor value is lower than mid_range_value => apply output_mid as highest available speed
+ * @brief Takes input value from from sensors and calculates a safe speed.
+ * @details (remember gear protector in PWM.c:set_speed)
+ * -obstacle solving via reverse_switch()
+ * -curve control via get_factor_from_servo_angle()
+ * -non linear variable speed control based on the front sensors distance to obstacle
+ * -power mode if the car detects an uphill or drastic removal of obstacle in front of the car
+ * NOTE: Only about one hour was spent testing the IMU sensor , probably some bugs left to fix related to the power-mode
  * @param self Pointer address to the SpeedCtrl-instance.
  * @param front_sensor_input sensor value
  * @param left_sensor_input sensor value
  * @param right_sensor_input sensor value
- * @param servo_angle value between 0 and 200 where 100 is streight forward
+ * @param servo_angle value between 0 and 200 where 100 is straight forward
  * @return int8_t
  */
-int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle)
+int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16_t left_sensor_input, uint16_t right_sensor_input, uint8_t servo_angle, float pitch_value)
 {
     uint16_t side_sensor_input;
     uint8_t output_span;
@@ -66,10 +65,12 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
     left_sensor_input = sanitize_sensor_input(self, left_sensor_input);
     right_sensor_input = sanitize_sensor_input(self, right_sensor_input);
     float curve_slowdown_factor = get_factor_from_servo_angle(servo_angle);
-    if((curve_slowdown_factor < 0.8) && self->pwr_output)
+
+    // disengage power mode in curves
+    if ((curve_slowdown_factor < 0.8) && self->pwr_output)
     {
-        self->pwr_output = false; 
-    } 
+        self->pwr_output = false;
+    }
 
     reverse_switch(self, front_sensor_input, left_sensor_input, right_sensor_input);
     if (self->reverse)
@@ -77,7 +78,7 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
         return (int8_t)self->reverese_output;
     }
 
-
+    // decide if the calculated speed will be based of output_mid or output_max value
     float input_percent = (float)front_sensor_input / self->max_input;
     if (input_percent >= self->mid_range_limit)
     {
@@ -87,23 +88,45 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
     {
         output_span = self->output_max - self->output_min;
     }
-    uint8_t output = (int8_t)((output_span * input_percent) + self->output_min)*curve_slowdown_factor;
-
-    if((front_sensor_input == self->max_input) && (self->old_output < 40))
+    uint8_t output = (int8_t)((output_span * input_percent) + self->output_min) * curve_slowdown_factor;
+    if (output < self->output_min)
     {
-      self->pwr_output = true;
+        output = self->output_min;
     }
-    if(self->pwr_output)
+
+    if ((front_sensor_input == self->max_input) && (self->old_output < 40))
     {
-        
-        if ((self->pwr_count++ == self->pwr_count_max) || !self->pwr_output)
-            {
-                self->pwr_output = false;
-                self->pwr_count = 0;
-            }
-           self->old_output = 90;
-            return 90;
-    } 
+        self->pwr_output = true;
+    }
+
+    // power mode on if the car sense a uphill between 9 and 45 degrees
+    if (pitch_value >= 45)
+    {
+        self->pwr_output = false;
+
+        return 0;
+    }
+    else if (pitch_value < 45 && pitch_value >= 9)
+    {
+        self->pwr_output = true;
+        self->pwr_count = 0;
+    }
+    else
+    {
+        self->pwr_output = false;
+    }
+
+    if (self->pwr_output)
+    {
+
+        if ((self->pwr_count++ == self->pwr_count_max))
+        {
+            self->pwr_output = false;
+            self->pwr_count = 0;
+        }
+        self->old_output = 89;
+        return 89;
+    }
     self->old_output = output;
     return output;
 }
@@ -126,7 +149,9 @@ static uint16_t sanitize_sensor_input(SpeedCtrl *self, uint16_t sensor_input)
 
 /**
  * @brief switch reverse mode on and off
- *
+ * @details
+ * The reverse mode is active when the car has felt an obstacle for a certain
+ * period of time, until the desired distance from the obstacle is reached.
  * @param self Pointer address to the SpeedCtrl-instance.
  * @param front_sensor_input sensor value
  * @param left_sensor_input sensor value
@@ -147,34 +172,41 @@ static void reverse_switch(SpeedCtrl *self, uint16_t front_sensor_input, uint16_
 
     else if (self->reverse)
     {
-        if((self->rev_count++ == self->rev_count_max) || 
-          ((front_sensor_input >= self->rev_stop_distance) &&
-           (left_sensor_input >= self->rev_stop_distance) &&
-           (right_sensor_input >= self->rev_stop_distance)))
+        if ((self->rev_count++ == self->rev_count_max) ||
+            ((front_sensor_input >= self->rev_stop_distance) &&
+             (left_sensor_input >= self->rev_stop_distance) &&
+             (right_sensor_input >= self->rev_stop_distance)))
         {
             self->rev_count = 0;
             self->reverse = false;
         }
     }
-    else{
+    else
+    {
         self->rev_count = 0;
     }
 }
 
+/**
+ * @brief calculates a factor based on the steering angle
+ * @details
+ * the purpose of the factor is to slow down the car in curves
+ * @param servo_angle
+ * @return float
+ */
 static float get_factor_from_servo_angle(uint8_t servo_angle)
 {
-    if(servo_angle > 100)
+    if (servo_angle > 100)
     {
         servo_angle = 200 - servo_angle;
     }
-
-    if(servo_angle < 50 && servo_angle >= 30 )
+    if (servo_angle < 50 && servo_angle >= 30)
     {
-        return 0.9;
+        return 1;
     }
-     if(servo_angle < 30 )
+    if (servo_angle < 30)
     {
-        return 0.7;
+        return 0.85;
     }
     return 1.0;
 }
