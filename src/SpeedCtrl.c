@@ -72,13 +72,14 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
         self->pwr_output = false;
     }
 
+    // conditions for reverse
     reverse_switch(self, front_sensor_input, left_sensor_input, right_sensor_input);
     if (self->reverse)
     {
         return (int8_t)self->reverese_output;
     }
 
-    // decide if the calculated speed will be based of output_mid or output_max value
+    // decide whether the calculated speed should be based on output_mid or output_max value
     float input_percent = (float)front_sensor_input / self->max_input;
     if (input_percent >= self->mid_range_limit)
     {
@@ -88,12 +89,14 @@ int8_t SpeedCtrl_calc_speed(SpeedCtrl *self, uint16_t front_sensor_input, uint16
     {
         output_span = self->output_max - self->output_min;
     }
+    // calculate output value based on front distance sensor 
     uint8_t output = (int8_t)((output_span * input_percent) + self->output_min) * curve_slowdown_factor;
     if (output < self->output_min)
     {
         output = self->output_min;
     }
 
+    // conditions for power mode
     if ((front_sensor_input == self->max_input) && (self->old_output < 40))
     {
         self->pwr_output = true;
