@@ -21,7 +21,7 @@ Successfully made a port to the wizio-pico platform.
 #### MPU-6050 IMU
 This Six-Axis gyro was also found among the leftovers. All info about registers was clearly written in the data sheet but it was harder to understand how to use this device properly. A few days were clearliy not enough to master this device.
 
-#### QUICRUN 10BL60 FARTREGLAGE 1/10
+#### QUICRUN 10BL60 ESC 1/10
 Cheap and relatively small ESC was bought to come
 further in the project. Had to remove the brake function to enable a proper reverse. The ESC was controlled
 with a 50Hz pwm signal that was based on a duty cycle of 1.5ms.
