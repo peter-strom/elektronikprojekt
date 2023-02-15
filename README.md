@@ -13,10 +13,10 @@ strong brushless motor and support for 2s lipo battery.
 Tired of the arduino uno we used in school, I looked for a more powerful MCU. Preferably with floating point support which could come in use for the pid regulation.
 
 #### VL53L0X TOF - distance sensor
-Two sensors were found among the leftovers from last year's students. The official drivers were really heavy. But found this amazing piece by artfulbytes:
+Two sensors were found among the leftovers from last year's students. The official drivers were really heavy. But found this amazing driver made by artfulbytes:
 https://github.com/artfulbytes/vl6180x_vl53l0x_msp430 .
-His lightweight bare metal drivers were easy to follow.
-Successfully made a port to the wizio-pico platform.
+This lightweight bare metal drivers were easy to follow.
+Successfully made a slightly improved port to the wizio-pico platform.
 
 #### MPU-6050 IMU
 This Six-Axis gyro was also found among the leftovers. All info about registers was clearly written in the data sheet but it was harder to understand how to use this device properly. A few days were clearliy not enough to master this device.
