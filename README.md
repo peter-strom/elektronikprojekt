@@ -1,9 +1,13 @@
 # Project - Self-driving RC car - Ela21, YRGO
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/car.jpg" width="600" >
-Fig.1 - The final version of our car.
+fdg
+>Fig.1 - The final version of our car.
 
 ## Introduction
 The aim of this school project was to transform a radio-controlled car into a self-driving car to get around a race track. But the desire to learn led to completely different goals. As I was responsible for software development, I took the opportunity to fill these weeks with as many new experiences as I could come up with.
+
+#### Development environment
+All code was written in Visual Studio Code using the [PlatformIO extension](https://platformio.org/) and the [wizio-pico](https://github.com/Wiz-IO/wizio-pico)
 
 #### CARISMA GT24TR 1:24 4WD MICRO TRUGGY RTR
 The car that was chosen met the competition rules size requirements. Also appeared to have sufficient ground clearance,
@@ -13,10 +17,8 @@ strong brushless motor and support for 2s lipo battery.
 Tired of the arduino uno we used in school, I looked for a more powerful MCU. Preferably with floating point support which could come in use for the pid regulation.
 
 #### VL53L0X TOF - distance sensor
-Two sensors were found among the leftovers from last year's students. The official drivers were really heavy. But found this amazing driver made by artfulbytes:
-https://github.com/artfulbytes/vl6180x_vl53l0x_msp430 .
-This lightweight bare metal drivers were easy to follow.
-Successfully made a slightly improved port to the wizio-pico platform.
+Two sensors were found among the leftovers from last year's students. The official drivers were really heavy. But found [this lightweight driver](https://github.com/artfulbytes/vl6180x_vl53l0x_msp430) made by artfulbytes.
+This lightweight bare metal drivers were easy to follow so i made a port but slightly different..
 
 #### MPU-6050 IMU
 This Six-Axis gyro was also found among the leftovers. All info about registers was clearly written in the data sheet but it was harder to understand how to use this device properly. A few days were clearliy not enough to master this device.
