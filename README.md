@@ -1,7 +1,6 @@
 # Project - Self-driving RC car - Ela21, YRGO
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/car.jpg" width="600" >
-fdg
->Fig.1 - The final version of our car.
+Fig.1 - The final version of our car.
 
 ## Introduction
 The aim of this school project was to transform a radio-controlled car into a self-driving car to get around a race track. But the desire to learn led to completely different goals. As I was responsible for software development, I took the opportunity to fill these weeks with as many new experiences as I could come up with.
@@ -43,57 +42,56 @@ More time, a voltage regulator and a 10T gear should have helped alot. (Watch th
 
 <br><br><br><br>
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/schematics.png" width="800" >
->Fig.2 - schematics.
+<br>Fig.2 - schematics.
 
 <br><br><br><br>
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/pin.jpg" width="600">
->Fig.3 - pinplaning.
+<br>Fig.3 - pinplaning.
 
 <br><br><br><br>
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/oscilloscope.jpg" width="600" >
->Fig.4 - This project actually inspired me to buy my own oscilloscope. A necessity if you want to debug or verify the communication regardless of whether it is i2c or pwm signals. Can highly recommend the 1104X-E.
+<br>Fig.4 - This project actually inspired me to buy my own oscilloscope. A necessity if you want to debug or verify the communication regardless of whether it is i2c or pwm signals. Can highly recommend the 1104X-E.
 
 ## flowcharts
 
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/main.png" width="600" >
->Fig.5 - Overview.
-
+Fig.5 - Overview.
 <br><br><br><br>
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/pid.png" width="600" >
->Fig.6 - The pid regulation that turned out to work very well.
+Fig.6 - The pid regulation that turned out to work very well.
 
 <br><br><br><br>
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/speedctrl.png" width="600" >
->Fig.7 - The speed control function..  
+Fig.7 - The speed control function..  
 
 <br><br><br><br>
 ## Videos
 [![Watch the video](https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/mov1.jpg)](https://youtu.be/T6Ry1QDTvqE)
->Movie.1 - First testrun with drivetrain. However, the pid regulation was already tested by pushing the car forward by hand.
+Movie.1 - First testrun with drivetrain. However, the pid regulation was already tested by pushing the car forward by hand.
 
 <br><br><br><br>
 [![Watch the video](https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/mov2.jpg)](https://youtu.be/GdP7vjcRZxI)
->Movie.2 - Obstacle avoidance system. Fun to develop. But caused issues when discovered the uphill obstacles. 
+Movie.2 - Obstacle avoidance system. Fun to develop. But caused issues when discovered the uphill obstacles. 
 
 <br><br><br><br>
 [![Watch the video](https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/mov3.jpg)](https://youtu.be/kByNOn7Lbe0)
->Movie.3 - Gyro in action. To solve the issue that was caused by the "obstacle avoidance system" a very experimental feature implemented 
+Movie.3 - Gyro in action. To solve the issue that was caused by the "obstacle avoidance system" a very experimental feature implemented 
 like 2 days before the competiotion. Not ideal but fun tho.
 
 <br><br><br><br>
 [![Watch the video](https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/mov4.jpg)](https://youtu.be/v_iZuXGWwUY)
->Movie.4 - Uphill start with gyro. worked like a charm.
+Movie.4 - Uphill start with gyro. worked like a charm.
 
 <br><br><br><br>
 [![Watch the video](https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/mov5.jpg)](https://youtu.be/X4wRlS_64eo)
->Movie.5 - Just before the competition. Top notch pid regulation. Without competitors though. Turned out that the 
+Movie.5 - Just before the competition. Top notch pid regulation. Without competitors though. Turned out that the 
 "obstacle avoidance system" was a huge disadvantage in the competition. XD
 
 <br><br><br><br>
 [![Watch the video](https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/mov6.jpg)](https://youtu.be/dhRyVaw5hpI)
->Movie.6 - High voltage issue. Too high voltage caused by a new charger. A voltage regulator would solve many problems and make adjustments more easy.
+Movie.6 - High voltage issue. Too high voltage caused by a new charger. A voltage regulator would solve many problems and make adjustments more easy.
 
 <br><br><br><br>
 [![Watch the video](https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/mov7.jpg)](https://youtu.be/kcBSzKzJYdA)
->Movie.7 - ESC issue. Too fast restart sets the Electronic speed controller in a "slow-mode". We knew the problem but thought we could handle it by wait 10 seconds every restart. 
+Movie.7 - ESC issue. Too fast restart sets the Electronic speed controller in a "slow-mode". We knew the problem but thought we could handle it by wait 10 seconds every restart. 
 Probalby caused by the capacitors and a better solution should have been to discharge them on shutdown.
