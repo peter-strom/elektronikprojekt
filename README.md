@@ -10,7 +10,7 @@ The car that was chosen met the competition rules size requirements. Also appear
 strong brushless motor and support for 2s lipo battery.
 
 #### Arduino Nano RP2040 Connect
-Tired of the arduino uno we used in school, I looked in the shops for something more powerful. Preferably with floating point support which could come in handy for the pid regulation.
+Tired of the arduino uno we used in school, I looked for a more powerful MCU. Preferably with floating point support which could come in use for the pid regulation.
 
 #### VL53L0X TOF - distance sensor
 Two sensors were found among the leftovers from last year's students. The official drivers were really heavy. But found this amazing piece by artfulbytes:
@@ -29,7 +29,7 @@ with a 50Hz pwm signal that was based on a duty cycle of 1.5ms.
 #### Savöx SH-0257MG
 The 3-pole servo has built-in control and therefore requires
 only power and a pwm signal to change its position.
-The servo was controlled with a 240Hz pwm signal that came from a
+The servo was controlled with a 240Hz pwm signal that was based on a
 duty cycle of 1.5 ms.
 
 ## Drivetrain issues 
