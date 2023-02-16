@@ -1,9 +1,9 @@
-# Project - Self-driving RC car - Ela21, YRGO
+# School Project - Self-driving RC car - Ela21, YRGO
 <img src="https://github.com/peter-strom/elektronikprojekt/blob/cff85e32945de04a21a150acce7a834be64f445f/doc/car.jpg" width="600" >
 Fig.1 - The final version of our car.
 
 ## Introduction
-The aim of this school project was to transform a radio-controlled car into a self-driving car to get around a race track. But the desire to learn led to completely different goals. As I was responsible for software development, I took the opportunity to fill these weeks with as many new experiences as I could come up with.
+The aim of this school project was to transform a radio-controlled car into a self-driving car, capable to win a race on a race track. But the desire to learn led to completely different goals. As i was responsible for software development, i took the opportunity to fill these weeks with as many new experiences as i could come up with.
 
 #### Development environment
 All code was written in Visual Studio Code using the [PlatformIO extension](https://platformio.org/) and the [wizio-pico](https://github.com/Wiz-IO/wizio-pico)
